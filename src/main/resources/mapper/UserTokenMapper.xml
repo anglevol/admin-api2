@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tenji.adminapi2.mapper.UserTokenMapper">
+    <resultMap id="BaseResultMap" type="com.tenji.adminapi2.model.UserToken">
+        <id column="user_id" jdbcType="BIGINT" property="userId" />
+        <result column="token" jdbcType="VARCHAR" property="token" />
+    </resultMap>
+    <select id="getByToken" resultType="com.tenji.adminapi2.model.UserToken">
+        select * from user_token
+        where
+            token=#{token,jdbcType=VARCHAR}
+    </select>
+
+    <select id="getByUserId" resultType="com.tenji.adminapi2.model.UserToken">
+        select * from user_token
+        where
+            user_id=#{userId,jdbcType=BIGINT}
+
+    </select>
+    <update id="updateById" parameterType="com.tenji.adminapi2.model.UserToken">
+        update user_token
+        <set>
+            <if test="token != null">
+            token=#{token,jdbcType=VARCHAR},
+            </if>
+        </set>
+            where user_id =#{userId,jdbc=BIGINT}
+    </update>
+    <insert id="insert" parameterType="com.tenji.adminapi2.model.UserToken">
+       insert into  user_token (user_id,token)
+       values (#{userId,jdbcType=BIGINT},#{token,jdbcType=VARCHAR})
+    </insert>
+</mapper>

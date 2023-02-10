@@ -2,8 +2,10 @@ package com.tenji.adminapi2.controller;
 
 import com.tenji.adminapi2.api.ApiResponse;
 import com.tenji.adminapi2.dto.LoginFrom;
+import com.tenji.adminapi2.dto.LoginUserVo;
 import com.tenji.adminapi2.mapper.UserMapper;
 import com.tenji.adminapi2.model.User;
+import com.tenji.adminapi2.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 public class IndexController {
 
     @Autowired
-    private UserMapper userMapper;
+    private UserService userService;
 
     @GetMapping("/")
     public ApiResponse<String> Index(){
@@ -22,11 +24,11 @@ public class IndexController {
 
 
     @PostMapping("/login")
-    public String Login(@RequestBody LoginFrom from){
+    public ApiResponse<LoginUserVo> Login(@RequestBody LoginFrom from){
 
-       User user= userMapper.getUser(from.getUserName(),from.getPassWord());
+        LoginUserVo vo= userService.login(from.getUserName(),from.getPassWord());
 
-        return "success-----"+user.getUserName()+"------"+user.getPassWord()+"--------------"+user.getToken();
+       return new ApiResponse<>(vo);
     }
 
 
