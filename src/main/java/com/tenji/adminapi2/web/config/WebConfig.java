@@ -23,19 +23,8 @@ public class WebConfig implements WebMvcConfigurer {
         registration.addPathPatterns("/**");
         // 添加不拦截路径
         registration.excludePathPatterns(
-                // swagger2
-                "/swagger-resources/**",
-                "/webjars/**",
-                "/v2/api-docs/**",
-                "/swagger-ui.html",
-                "/doc.html",
-                "/error",
-                // 应用健康检查
-                "/v1/base/health/healthCheck",
-                "/v1/admin/login/getCaptcha",
-                "/v1/admin/login/login",
-                "/v1/wxNotify/**",
-                "/v1/wx/miniprogram/getAccessToken"
+                "/index/index",
+                "/index/login"
         );
     }
 }

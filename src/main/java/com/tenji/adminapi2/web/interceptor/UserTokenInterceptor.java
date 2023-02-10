@@ -29,6 +29,7 @@ public class UserTokenInterceptor extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         // 获取请求携带的令牌
         String token = request.getHeader("UserToken");
+
         if (StringUtils.isNotBlank(token)) {
             UserToken userToken = userTokenService.getByToken(token);
             if (Objects.nonNull(userToken)) {
@@ -42,13 +43,12 @@ public class UserTokenInterceptor extends HandlerInterceptorAdapter {
                 }else{
                     throw new ApiException(ApiResponseCode.status_304,"用户不存在");
                 }
-
             } else {
                 throw new ApiException(ApiResponseCode.status_304,"用户不存在");
             }
         } else {
             log.info("request: " + request.getRequestURI());
-            throw new ApiException(ApiResponseCode.status_304,"用户不存在");
+            throw new ApiException(ApiResponseCode.status_304,"请正确传值");
         }
     }
 

@@ -16,7 +16,7 @@ public class IndexController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/")
+    @GetMapping("/index")
     public ApiResponse<String> Index(){
 
         return new ApiResponse<>("success");
