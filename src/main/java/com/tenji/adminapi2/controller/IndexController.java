@@ -1,5 +1,6 @@
 package com.tenji.adminapi2.controller;
 
+import com.tenji.adminapi2.api.ApiResponse;
 import com.tenji.adminapi2.dto.LoginFrom;
 import com.tenji.adminapi2.mapper.UserMapper;
 import com.tenji.adminapi2.model.User;
@@ -14,8 +15,9 @@ public class IndexController {
     private UserMapper userMapper;
 
     @GetMapping("/")
-    public String Index(){
-        return "success";
+    public ApiResponse<String> Index(){
+
+        return new ApiResponse<>("success");
     }
 
 
