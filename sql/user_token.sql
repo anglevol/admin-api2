@@ -1,6 +1,6 @@
 CREATE TABLE `user_token` (
                               `user_id` int(11) NOT NULL AUTO_INCREMENT,
-                              `token` varchar(20) DEFAULT NULL,
+                              `token` varchar(225) DEFAULT NULL,
                               PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
