@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper  namespace="com.tenji.adminapi2.mapper.GrantedHolidayMapper">
+    <resultMap id="BaseResultMap" type="com.tenji.adminapi2.model.GrantedHoliday">
+        <id column="user_id" jdbcType="BIGINT" property="userId" />
+        <result column="granted_service_years" jdbcType="FLOAT" property="grantedServiceYears" />
+        <result column="granted_date" jdbcType="DATE" property="grantedDate" />
+        <result column="expiry_date" jdbcType="DATE" property="expiryDate" />
+        <result column="carryover_expiry_date" jdbcType="DATE" property="carryoverExpiryDate" />
+        <result column="granted_days" jdbcType="INTEGER" property="grantedDays" />
+        <result column="used_days" jdbcType="INTEGER" property="usedDays" />
+        <result column="unused_days" jdbcType="INTEGER" property="unusedDays" />
+        <result column="remaining_days" jdbcType="INTEGER" property="remainingDays" />
+    </resultMap>
+
+    <select id="getGrantedHolidayByUserId" resultType="com.tenji.adminapi2.model.GrantedHoliday">
+        select * from granted_holiday
+        where
+            userId=#{userId,jdbcType=BIGINT}
+    </select>
+</mapper>
