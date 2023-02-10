@@ -1,0 +1,22 @@
+server:
+  port: 9080
+  servlet:
+    context-path: /admin-api
+  tomcat:
+    uri-encoding: UTF-8
+
+mybatis:
+  mapper-locations: classpath*:mapper/*Mapper.xml
+  type-aliases-package: com.tenji.adminapi
+  configuration:
+    map-underscore-to-camel-case: true
+    default-statement-timeout: 15
+
+
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/holiday?useUnicode=truetrue&characterEncoding=utf-8&serverTimezone=GMT%2B8&useSSL=false&zeroDateTimeBehavior=convertToNull&allowPublicKeyRetrieval=true
+    username: root
+    password:
