@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/index")
+@CrossOrigin
 public class IndexController {
 
     @Autowired
@@ -31,6 +32,9 @@ public class IndexController {
        return new ApiResponse<>(vo);
     }
 
-
+    @GetMapping("/test")
+    public ApiResponse<String> test(){
+        return new ApiResponse<>("dsds");
+    }
 
 }
