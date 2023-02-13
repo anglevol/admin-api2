@@ -1,13 +1,11 @@
-package com.tenji.adminapi2.model;
+package com.tenji.adminapi2.dto;
 
 import lombok.Data;
 
 import java.util.Date;
 
 @Data
-public class GrantedHoliday {
-    //ID
-    private long id;
+public class GrantedHolidayForm {
     //ユーザーID
     private long userId;
     //付与時社歴
@@ -28,8 +26,5 @@ public class GrantedHoliday {
     private int unusedDays;
     //残日数
     private int remainingDays;
-    //作成時間
-    private Date createTime;
-    //更新時間
-    private Date updateTime;
+
 }

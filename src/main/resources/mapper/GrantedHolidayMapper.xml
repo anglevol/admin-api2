@@ -13,9 +13,33 @@
         <result column="remaining_days" jdbcType="INTEGER" property="remainingDays" />
     </resultMap>
 
-    <select id="getGrantedHolidayByUserId" resultType="com.tenji.adminapi2.model.GrantedHoliday">
+    <select id="getById" resultType="com.tenji.adminapi2.model.GrantedHoliday">
         select * from granted_holiday
         where
-            userId=#{userId,jdbcType=BIGINT}
+            id=#{id,jdbcType=BIGINT}
     </select>
+
+    <select id="getByUserId" resultType="com.tenji.adminapi2.model.GrantedHoliday">
+        select * from granted_holiday
+        where
+            user_id=#{userId,jdbcType=BIGINT}
+    </select>
+
+    <insert id="insert" parameterType="com.tenji.adminapi2.model.GrantedHoliday">
+        insert ignore into granted_holiday(
+            user_id,
+            granted_service_years,
+            granted_date,
+            expiry_date,
+            carryover_expiry_date,
+            status,
+            granted_days,
+            used_days,
+            unused_days,
+            remaining_days,
+            create_time,
+            update_time
+        )
+		values (#{userId},#{grantedServiceYears},#{grantedDate},#{expiryDate},#{carryoverExpiryDate},#{status},#{grantedDays},#{usedDays},#{unusedDays},#{remainingDays},#{createTime},#{updateTime})
+    </insert>
 </mapper>
