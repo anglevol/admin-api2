@@ -1,17 +1,21 @@
-package com.tenji.adminapi2.dto;
+package com.tenji.adminapi2.model;
 
 import lombok.Data;
 
 import java.util.Date;
 
 @Data
-public class GrantedHolidayForm {
+public class GrantedHolidayModel {
     //ID
     private long id;
-    //管理者ID
-    private long userId;
     //社員ID
     private String employeeId;
+    //社員氏名
+    private String employeeName;
+    //部署
+    private String departmentName;
+    //入社日
+    private Date employDate;
     //付与時社歴
     private float grantedServiceYears;
     //付与年
@@ -21,7 +25,7 @@ public class GrantedHolidayForm {
     //繰越失効日
     private Date carryoverExpiryDate;
     //状態
-    private String statusCode;
+    private String status;
     //付与日数
     private int grantedDays;
     //消化日数
@@ -30,4 +34,8 @@ public class GrantedHolidayForm {
     private int unusedDays;
     //残日数
     private int remainingDays;
+    //作成時間
+    private Date createTime;
+    //更新時間
+    private Date updateTime;
 }

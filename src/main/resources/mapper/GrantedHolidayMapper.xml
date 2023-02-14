@@ -1,38 +1,116 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper  namespace="com.tenji.adminapi2.mapper.GrantedHolidayMapper">
-    <resultMap id="BaseResultMap" type="com.tenji.adminapi2.model.GrantedHoliday">
-        <id column="user_id" jdbcType="BIGINT" property="userId" />
-        <result column="granted_service_years" jdbcType="FLOAT" property="grantedServiceYears" />
-        <result column="granted_date" jdbcType="DATE" property="grantedDate" />
-        <result column="expiry_date" jdbcType="DATE" property="expiryDate" />
-        <result column="carryover_expiry_date" jdbcType="DATE" property="carryoverExpiryDate" />
-        <result column="granted_days" jdbcType="INTEGER" property="grantedDays" />
-        <result column="used_days" jdbcType="INTEGER" property="usedDays" />
-        <result column="unused_days" jdbcType="INTEGER" property="unusedDays" />
-        <result column="remaining_days" jdbcType="INTEGER" property="remainingDays" />
-    </resultMap>
 
-    <select id="getById" resultType="com.tenji.adminapi2.model.GrantedHoliday">
-        select * from granted_holiday
+    <select id="getById" resultType="com.tenji.adminapi2.model.GrantedHolidayModel">
+        select
+            gh.id,
+            e.employee_id,
+            e.name as employee_name,
+            dpt.value as department_name,
+            e.employdate,
+            gh.granted_service_years,
+            gh.granted_date,
+            gh.expiry_date,
+            gh.carryover_expiry_date,
+            status.value as status,
+            gh.granted_days,
+            gh.used_days,
+            gh.unused_days,
+            gh.remaining_days,
+            gh.create_time,
+            gh.update_time
+        from granted_holiday gh
+		inner join employee e
+		    on gh.employee_id = e.employee_id
+        inner join master_class dpt
+            on e.department_code = dpt.code
+            and dpt.type = 'DPT'
+        inner join master_class status
+            on gh.status_code = status.code
+            and status.type = 'GHST'
         where
-            id=#{id,jdbcType=BIGINT}
+            gh.id=#{id}
     </select>
 
-    <select id="getByUserId" resultType="com.tenji.adminapi2.model.GrantedHoliday">
-        select * from granted_holiday
+    <select id="getEntityById" resultType="com.tenji.adminapi2.entity.GrantedHoliday">
+        select *
+        from granted_holiday
         where
-            user_id=#{userId,jdbcType=BIGINT}
+            id=#{id}
     </select>
 
-    <insert id="insert" parameterType="com.tenji.adminapi2.model.GrantedHoliday">
+    <select id="getByEmployeeId" resultType="com.tenji.adminapi2.model.GrantedHolidayModel">
+        select
+            gh.id,
+            e.employee_id,
+            e.name as employee_name,
+            dpt.value as department_name,
+            e.employdate,
+            gh.granted_service_years,
+            gh.granted_date,
+            gh.expiry_date,
+            gh.carryover_expiry_date,
+            status.value as status,
+            gh.granted_days,
+            gh.used_days,
+            gh.unused_days,
+            gh.remaining_days,
+            gh.create_time,
+            gh.update_time
+        from granted_holiday gh
+        inner join employee e
+            on gh.employee_id = e.employee_id
+        inner join master_class dpt
+            on e.department_code = dpt.code
+            and dpt.type = 'DPT'
+        inner join master_class status
+            on gh.status_code = status.code
+            and status.type = 'GHST'
+        where
+            gh.employee_id=#{employeeId}
+    </select>
+
+    <select id="getByStatusCode" resultType="com.tenji.adminapi2.model.GrantedHolidayModel">
+        select
+            gh.id,
+            e.employee_id,
+            e.name as employee_name,
+            dpt.name as department_name,
+            e.employdate,
+            gh.granted_service_years,
+            gh.granted_date,
+            gh.expiry_date,
+            gh.carryover_expiry_date,
+            status.value as status,
+            gh.granted_days,
+            gh.used_days,
+            gh.unused_days,
+            gh.remaining_days,
+            gh.create_time,
+            gh.update_time
+        from granted_holiday gh
+                 inner join employee e
+                            on gh.employee_id = e.employee_id
+                 inner join master_class dpt
+                            on e.department_code = dpt.code
+                                and dpt.type = 'DPT'
+                 inner join master_class status
+                            on gh.status_code = status.code
+                                and status.type = 'GHST'
+        where
+            gh.status_code = #{statusCode}
+    </select>
+
+    <insert id="insert" parameterType="com.tenji.adminapi2.entity.GrantedHoliday">
         insert ignore into granted_holiday(
             user_id,
+            employee_id,
             granted_service_years,
             granted_date,
             expiry_date,
             carryover_expiry_date,
-            status,
+            status_code,
             granted_days,
             used_days,
             unused_days,
@@ -40,6 +118,28 @@
             create_time,
             update_time
         )
-		values (#{userId},#{grantedServiceYears},#{grantedDate},#{expiryDate},#{carryoverExpiryDate},#{status},#{grantedDays},#{usedDays},#{unusedDays},#{remainingDays},#{createTime},#{updateTime})
+		values (#{userId},#{employeeId},#{grantedServiceYears},#{grantedDate},#{expiryDate},#{carryoverExpiryDate},#{statusCode},#{grantedDays},#{usedDays},#{unusedDays},#{remainingDays},#{createTime},#{updateTime})
     </insert>
+
+    <update id="updateStatus">
+        update
+            granted_holiday
+        set
+            status_code = #{statusCode},
+            update_time = now()
+        where
+            id = #{id}
+    </update>
+
+    <update id="reduceHoliday">
+        update
+            granted_holiday
+        set
+            used_days = used_days + #{holiday},
+            unused_days = unused_days - #{holiday},
+            remaining_days = remaining_days - #{holiday},
+            update_time = now()
+        where
+            id = #{id}
+    </update>
 </mapper>

@@ -2,23 +2,24 @@ package com.tenji.adminapi2.controller;
 
 import com.tenji.adminapi2.api.ApiResponse;
 import com.tenji.adminapi2.dto.GrantedHolidayForm;
-import com.tenji.adminapi2.model.GrantedHoliday;
+import com.tenji.adminapi2.dto.TakeHolidayForm;
+import com.tenji.adminapi2.model.GrantedHolidayModel;
 import com.tenji.adminapi2.service.GrantedHolidayService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/grantedHoliday")
+@RequestMapping("/granted")
 public class GrantedHolidayController {
 
     @Autowired
     GrantedHolidayService grantedHolidayService;
 
     @RequestMapping(value = "/{id}",method = RequestMethod.GET)
-    public ApiResponse<GrantedHoliday> getGrantedHoliday(@PathVariable long id){
+    public ApiResponse<GrantedHolidayModel> getGrantedHoliday(@PathVariable long id){
 
-        GrantedHoliday grantedHoliday = grantedHolidayService.getById(id);
-        return new ApiResponse<>(grantedHoliday);
+        GrantedHolidayModel grantedHolidayModel = grantedHolidayService.getById(id);
+        return new ApiResponse<>(grantedHolidayModel);
 
     }
 
@@ -30,11 +31,19 @@ public class GrantedHolidayController {
 
     }
 
-    @RequestMapping(value = "changeStatus",method = RequestMethod.POST)
-    public ApiResponse<Integer> changeStatusById(@RequestBody GrantedHolidayForm grantedHolidayForm){
+    @RequestMapping(value = "/changeStatus",method = RequestMethod.POST)
+    public ApiResponse<Integer> changeStatus(@RequestBody GrantedHolidayForm grantedHolidayForm){
 
+        int updateRow = grantedHolidayService.updateStatus(grantedHolidayForm.getId(),grantedHolidayForm.getStatusCode());
+        return new ApiResponse<>(updateRow);
 
-        return new ApiResponse<>(1);
+    }
+
+    @RequestMapping(value = "/takeHoliday",method = RequestMethod.POST)
+    public ApiResponse<Integer> takeHoliday(@RequestBody TakeHolidayForm takeHolidayForm){
+
+        int updateRow = grantedHolidayService.takeHoliday(takeHolidayForm.getId(),takeHolidayForm.getHoliday());
+        return new ApiResponse<>(updateRow);
 
     }
 }

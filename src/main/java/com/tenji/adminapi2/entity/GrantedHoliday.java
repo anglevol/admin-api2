@@ -1,4 +1,4 @@
-package com.tenji.adminapi2.model;
+package com.tenji.adminapi2.entity;
 
 import lombok.Data;
 
@@ -8,8 +8,10 @@ import java.util.Date;
 public class GrantedHoliday {
     //ID
     private long id;
-    //ユーザーID
+    //管理者ID
     private long userId;
+    //社員ID
+    private String employeeId;
     //付与時社歴
     private float grantedServiceYears;
     //付与年
@@ -18,8 +20,8 @@ public class GrantedHoliday {
     private Date expiryDate;
     //繰越失効日
     private Date carryoverExpiryDate;
-    //状態
-    private int status;
+    //状態コード
+    private String statusCode;
     //付与日数
     private int grantedDays;
     //消化日数

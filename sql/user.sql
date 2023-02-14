@@ -6,4 +6,4 @@ CREATE TABLE `user` (
                         PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
-INSERT INTO `user`(`id`, `user_name`, `password`, `sex`) VALUES (1, 'admin', '111111', 0);
+INSERT INTO `user`(`id`, `user_name`, `password`, `sex`, `department`) VALUES (1, 'admin', '111111', 0);

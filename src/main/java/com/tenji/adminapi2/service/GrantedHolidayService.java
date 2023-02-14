@@ -1,19 +1,20 @@
 package com.tenji.adminapi2.service;
 
-
 import com.tenji.adminapi2.dto.GrantedHolidayForm;
-import com.tenji.adminapi2.model.GrantedHoliday;
+import com.tenji.adminapi2.model.GrantedHolidayModel;
 
 import java.util.List;
 
 public interface GrantedHolidayService {
 
-    List<GrantedHoliday> getByUserId(long userId);
+    List<GrantedHolidayModel> getByEmployeeId(String employeeId);
 
-    GrantedHoliday getById(long id);
+    GrantedHolidayModel getById(long id);
 
     int add(GrantedHolidayForm grantedHolidayForm);
 
-    int changeStatusById(long id,int status);
+    int updateStatus(long id, String statusCode);
+
+    int takeHoliday(long id, int holiday);
 
 }
