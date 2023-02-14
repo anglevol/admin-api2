@@ -10,4 +10,17 @@ public class User {
 
     private String passWord;
 
+    private String roles;
+
+    private String introduction;
+
+    private String avatar;
+
+    private String name;
+
+    //0 man 1 women
+    private Integer sex;
+
+
+
 }
