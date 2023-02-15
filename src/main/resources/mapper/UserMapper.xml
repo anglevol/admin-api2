@@ -5,6 +5,12 @@
         <id column="id" jdbcType="BIGINT" property="id" />
         <result column="user_name" jdbcType="VARCHAR" property="userName" />
         <result column="password" jdbcType="VARCHAR" property="passWord" />
+
+        <result column="introduction" jdbcType="VARCHAR" property="introduction" />
+        <result column="avatar" jdbcType="VARCHAR" property="avatar" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="sex" jdbcType="INTEGER" property="sex" />
+        <result column="roles" jdbcType="VARCHAR" property="roles" />
     </resultMap>
 
 <select id="getUser" resultType="com.tenji.adminapi2.model.User">

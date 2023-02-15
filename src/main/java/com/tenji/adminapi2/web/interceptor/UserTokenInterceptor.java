@@ -1,5 +1,6 @@
 package com.tenji.adminapi2.web.interceptor;
 
+import com.alibaba.fastjson.JSONObject;
 import com.tenji.adminapi2.api.ApiResponseCode;
 import com.tenji.adminapi2.dto.UserInfo;
 import com.tenji.adminapi2.dto.UserInfoHolder;
@@ -28,7 +29,8 @@ public class UserTokenInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         // 获取请求携带的令牌
-        String token = request.getHeader("UserToken");
+       // String token = request.getHeader("UserToken");
+        String token = request.getParameter("token");
 
         if (StringUtils.isNotBlank(token)) {
             UserToken userToken = userTokenService.getByToken(token);
