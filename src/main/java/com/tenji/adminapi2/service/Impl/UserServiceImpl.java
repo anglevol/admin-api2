@@ -5,6 +5,7 @@ import com.tenji.adminapi2.api.ApiResponseCode;
 import com.tenji.adminapi2.dto.LoginUserVo;
 import com.tenji.adminapi2.dto.UserSearchForm;
 import com.tenji.adminapi2.exception.ApiException;
+import com.tenji.adminapi2.exception.BizException;
 import com.tenji.adminapi2.mapper.UserMapper;
 import com.tenji.adminapi2.mapper.UserTokenMapper;
 import com.tenji.adminapi2.model.User;
@@ -47,7 +48,7 @@ public class UserServiceImpl implements UserService {
 
             User user=  userMapper.getUser(userName,pwdEncryption);
             if(user ==null){
-                throw new ApiException(ApiResponseCode.status_103,"没有此用户");
+                throw new BizException("没有此用户");
             }
             String token =RandomUtil.getRandomStr(1)+"_"+ NanoIdUtils.randomNanoId32();
 
@@ -58,14 +59,14 @@ public class UserServiceImpl implements UserService {
                 newUserToken.setToken(token);
                 int i= userTokenMapper.updateById(newUserToken);
                 if(i<=0){
-                    throw new ApiException(ApiResponseCode.status_103,"token 更新失败");
+                    throw new BizException("token 更新失败");
                 }
             }else{
                 newUserToken.setUserId(user.getId());
                 newUserToken.setToken(token);
                 int i= userTokenMapper.insert(newUserToken);
                 if(i<=0){
-                    throw new ApiException(ApiResponseCode.status_103,"token 更新失败");
+                    throw new BizException("token 更新失败");
                 }
 
             }
@@ -74,7 +75,7 @@ public class UserServiceImpl implements UserService {
             vo.setToken(token);
 
         }catch (Exception  e){
-            throw new ApiException(e.getMessage());
+            throw new BizException(e.getMessage());
         }
         return vo;
 
