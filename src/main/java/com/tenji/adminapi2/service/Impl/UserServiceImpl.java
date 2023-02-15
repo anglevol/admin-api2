@@ -1,8 +1,11 @@
 package com.tenji.adminapi2.service.Impl;
 
+
 import com.tenji.adminapi2.api.ApiResponseCode;
 import com.tenji.adminapi2.dto.LoginUserVo;
+import com.tenji.adminapi2.dto.UserSearchForm;
 import com.tenji.adminapi2.exception.ApiException;
+import com.tenji.adminapi2.exception.BizException;
 import com.tenji.adminapi2.mapper.UserMapper;
 import com.tenji.adminapi2.mapper.UserTokenMapper;
 import com.tenji.adminapi2.model.User;
@@ -10,16 +13,21 @@ import com.tenji.adminapi2.model.UserToken;
 import com.tenji.adminapi2.service.UserService;
 import com.tenji.adminapi2.util.NanoIdUtils;
 import com.tenji.adminapi2.util.RandomUtil;
+import com.tenji.adminapi2.web.config.TenjiProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.DigestUtils;
+import java.nio.charset.StandardCharsets;
 
 import java.util.Objects;
-import java.util.Random;
 
 @Slf4j
 @Service
 public class UserServiceImpl implements UserService {
+
+    @Autowired
+    private TenjiProperties tenjiProperties;
 
     @Autowired
     private UserMapper userMapper;
@@ -33,37 +41,47 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public LoginUserVo login(String userName, String password) {
+    public LoginUserVo login(String userName, String password)  {
         LoginUserVo vo =new LoginUserVo();
-        User user=  userMapper.getUser(userName,password);
-        if(user ==null){
-            throw new ApiException(ApiResponseCode.status_103,"没有此用户");
-        }
-        String token =RandomUtil.getRandomStr(1)+"_"+ NanoIdUtils.randomNanoId32();
+        try{
+            String pwdEncryption = DigestUtils.md5DigestAsHex((password+tenjiProperties.getPwdEncryption()).getBytes(StandardCharsets.UTF_8)) ;
 
-        UserToken userToken = userTokenMapper.getByUserId(user.getId());
-        UserToken newUserToken = new UserToken();
-        if(Objects.nonNull(userToken)){
-            newUserToken.setUserId(user.getId());
-            newUserToken.setToken(token);
-           int i= userTokenMapper.updateById(newUserToken);
-           if(i<=0){
-               throw new ApiException(ApiResponseCode.status_103,"token 更新失败");
-           }
-        }else{
-            newUserToken.setUserId(user.getId());
-            newUserToken.setToken(token);
-            int i= userTokenMapper.insert(newUserToken);
-            if(i<=0){
-                throw new ApiException(ApiResponseCode.status_103,"token 更新失败");
+            User user=  userMapper.getUser(userName,pwdEncryption);
+            if(user ==null){
+                throw new BizException("没有此用户");
             }
+            String token =RandomUtil.getRandomStr(1)+"_"+ NanoIdUtils.randomNanoId32();
 
+            UserToken userToken = userTokenMapper.getByUserId(user.getId());
+            UserToken newUserToken = new UserToken();
+            if(Objects.nonNull(userToken)){
+                newUserToken.setUserId(user.getId());
+                newUserToken.setToken(token);
+                int i= userTokenMapper.updateById(newUserToken);
+                if(i<=0){
+                    throw new BizException("token 更新失败");
+                }
+            }else{
+                newUserToken.setUserId(user.getId());
+                newUserToken.setToken(token);
+                int i= userTokenMapper.insert(newUserToken);
+                if(i<=0){
+                    throw new BizException("token 更新失败");
+                }
+
+            }
+            vo.setUserId(user.getId());
+            vo.setUserName(user.getUserName());
+            vo.setToken(token);
+
+        }catch (Exception  e){
+            throw new BizException(e.getMessage());
         }
-        vo.setUserId(user.getId());
-        vo.setUserName(user.getUserName());
-        vo.setToken(token);
         return vo;
+
     }
+
+
 
 
 }
