@@ -12,7 +12,7 @@ public class EmployeeDto {
 
     private String name;
 
-    private Integer departmentId;
+    private String departmentCode;
 
     private Integer gender;
 

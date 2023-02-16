@@ -6,7 +6,7 @@
     <result column="employeeId" jdbcType="VARCHAR" property="employeeid" />
     <result column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="department_id" jdbcType="INTEGER" property="departmentId" />
+    <result column="department_code" jdbcType="VARCHAR" property="departmentId" />
     <result column="gender" jdbcType="INTEGER" property="gender" />
     <result column="employdate" jdbcType="DATE" property="employdate" />
     <result column="remaining_days" jdbcType="INTEGER" property="remainingDays" />
@@ -15,7 +15,7 @@
     <result column="updatedate" jdbcType="DATE" property="updatedate" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, employeeId, user_id, name, department_id, gender, employdate, remaining_days, 
+    id, employeeId, user_id, name, department_code, gender, employdate, remaining_days, 
     comment, createdate, updatedate
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -30,11 +30,11 @@
   </delete>
   <insert id="insert" parameterType="com.tenji.adminapi2.model.Employee">
     insert into employee (id, employeeId, user_id, 
-      name, department_id, gender, 
+      name, department_code, gender, 
       employdate, remaining_days, comment, 
       createdate, updatedate)
     values (#{id,jdbcType=INTEGER}, #{employeeid,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, 
-      #{name,jdbcType=VARCHAR}, #{departmentId,jdbcType=INTEGER}, #{gender,jdbcType=INTEGER}, 
+      #{name,jdbcType=VARCHAR}, #{departmentCode,jdbcType=VARCHAR}, #{gender,jdbcType=INTEGER},
       #{employdate,jdbcType=DATE}, #{remainingDays,jdbcType=INTEGER}, #{comment,jdbcType=VARCHAR}, 
       #{createdate,jdbcType=DATE}, #{updatedate,jdbcType=DATE})
   </insert>
@@ -53,8 +53,8 @@
       <if test="name != null">
         name,
       </if>
-      <if test="departmentId != null">
-        department_id,
+      <if test="departmentCode != null">
+        department_code,
       </if>
       <if test="gender != null">
         gender,
@@ -123,8 +123,8 @@
       <if test="name != null">
         name = #{name,jdbcType=VARCHAR},
       </if>
-      <if test="departmentId != null">
-        department_id = #{departmentId,jdbcType=INTEGER},
+      <if test="departmentCode != null">
+        department_code = #{departmentCode,jdbcType=VARCHAR},
       </if>
       <if test="gender != null">
         gender = #{gender,jdbcType=INTEGER},
@@ -152,7 +152,7 @@
     set employeeId = #{employeeid,jdbcType=VARCHAR},
       user_id = #{userId,jdbcType=INTEGER},
       name = #{name,jdbcType=VARCHAR},
-      department_id = #{departmentId,jdbcType=INTEGER},
+      department_code = #{departmentCode,jdbcType=VARCHAR},
       gender = #{gender,jdbcType=INTEGER},
       employdate = #{employdate,jdbcType=DATE},
       remaining_days = #{remainingDays,jdbcType=INTEGER},
