@@ -23,4 +23,9 @@
         select * from user
         where id=#{id,jdbcType=BIGINT}
     </select>
+    <select id="getUserList" resultType="java.util.List">
+        select * from user
+    </select>
+
+
 </mapper>

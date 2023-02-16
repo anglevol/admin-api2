@@ -19,4 +19,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://127.0.0.1:3306/tenji?useUnicode=truetrue&characterEncoding=utf-8&serverTimezone=GMT%2B8&useSSL=false&zeroDateTimeBehavior=convertToNull&allowPublicKeyRetrieval=true
     username: root
-    password: zz99860
+    password:
+    
+tenji:
+  pwdEncryption: _tenji
