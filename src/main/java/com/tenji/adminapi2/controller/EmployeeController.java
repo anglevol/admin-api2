@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/employee")
+@CrossOrigin
 public class EmployeeController {
 
     @Resource

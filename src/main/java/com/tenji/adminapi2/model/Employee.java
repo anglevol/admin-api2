@@ -13,7 +13,7 @@ public class Employee {
 
     private String name;
 
-    private Integer departmentCode;
+    private String departmentCode;
 
     private Integer gender;
 
