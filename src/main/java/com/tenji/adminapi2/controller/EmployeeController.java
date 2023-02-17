@@ -1,12 +1,15 @@
 package com.tenji.adminapi2.controller;
 
 import com.tenji.adminapi2.api.ApiResponse;
-import com.tenji.adminapi2.dto.EmployeeDto;
-import com.tenji.adminapi2.service.EmployeeService;
-import org.springframework.web.bind.annotation.*;
+import com.tenji.adminapi2.model.GrantedHolidayModel;
+import com.tenji.adminapi2.service.GrantedHolidayService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RestController
 @RequestMapping("/employee")
