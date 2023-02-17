@@ -3,10 +3,10 @@
 <mapper namespace="com.tenji.adminapi2.mapper.EmployeeMapper">
   <resultMap id="BaseResultMap" type="com.tenji.adminapi2.model.Employee">
     <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="employeeId" jdbcType="VARCHAR" property="employeeid" />
+    <result column="employee_id" jdbcType="VARCHAR" property="employeeid" />
     <result column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="department_code" jdbcType="VARCHAR" property="departmentId" />
+    <result column="department_code" jdbcType="VARCHAR" property="departmentCode" />
     <result column="gender" jdbcType="INTEGER" property="gender" />
     <result column="employdate" jdbcType="DATE" property="employdate" />
     <result column="remaining_days" jdbcType="INTEGER" property="remainingDays" />
@@ -15,7 +15,7 @@
     <result column="updatedate" jdbcType="DATE" property="updatedate" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, employeeId, user_id, name, department_code, gender, employdate, remaining_days, 
+    id, employee_id, user_id, name, department_code, gender, employdate, remaining_days,
     comment, createdate, updatedate
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -29,7 +29,7 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.tenji.adminapi2.model.Employee">
-    insert into employee (id, employeeId, user_id, 
+    insert into employee (id, employee_id, user_id,
       name, department_code, gender, 
       employdate, remaining_days, comment, 
       createdate, updatedate)
@@ -45,7 +45,7 @@
         id,
       </if>
       <if test="employeeid != null">
-        employeeId,
+        employee_id,
       </if>
       <if test="userId != null">
         user_id,
@@ -80,7 +80,7 @@
         #{id,jdbcType=INTEGER},
       </if>
       <if test="employeeid != null">
-        #{employeeid,jdbcType=VARCHAR},
+        #{employee_id,jdbcType=VARCHAR},
       </if>
       <if test="userId != null">
         #{userId,jdbcType=INTEGER},
@@ -88,8 +88,8 @@
       <if test="name != null">
         #{name,jdbcType=VARCHAR},
       </if>
-      <if test="departmentId != null">
-        #{departmentId,jdbcType=INTEGER},
+      <if test="departmentCode != null">
+        #{departmentCode,jdbcType=INTEGER},
       </if>
       <if test="gender != null">
         #{gender,jdbcType=INTEGER},
@@ -115,7 +115,7 @@
     update employee
     <set>
       <if test="employeeid != null">
-        employeeId = #{employeeid,jdbcType=VARCHAR},
+        employee_id = #{employeeid,jdbcType=VARCHAR},
       </if>
       <if test="userId != null">
         user_id = #{userId,jdbcType=INTEGER},
@@ -149,7 +149,7 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.tenji.adminapi2.model.Employee">
     update employee
-    set employeeId = #{employeeid,jdbcType=VARCHAR},
+    set employee_id = #{employeeid,jdbcType=VARCHAR},
       user_id = #{userId,jdbcType=INTEGER},
       name = #{name,jdbcType=VARCHAR},
       department_code = #{departmentCode,jdbcType=VARCHAR},
@@ -165,7 +165,7 @@
     select
     <include refid="Base_Column_List" />
     from employee
-    where userId = #{userId,jdbcType=INTEGER}
+    where user_Id = #{userId,jdbcType=INTEGER}
   </select>
   <select id="selectByName" parameterType="java.lang.String" resultMap="BaseResultMap">
     select
@@ -177,9 +177,9 @@
     select
     <include refid="Base_Column_List" />
     from employee
-    where employeeid = #{employeeId,jdbcType=VARCHAR}
+    where employee_id = #{employeeid,jdbcType=VARCHAR}
   </select>
-  <select id="selectAll" parameterType="java.lang.String" resultType="com.tenji.adminapi2.model.Employee">
+  <select id="selectAll" resultMap="BaseResultMap">
     select b.* from (select row_number() over (partition by name order by createdate desc) as 'rowid',
     a.* from employee a) b where b.rowid=1
   </select>

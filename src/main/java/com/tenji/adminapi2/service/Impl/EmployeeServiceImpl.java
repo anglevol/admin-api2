@@ -8,6 +8,7 @@ import com.tenji.adminapi2.mapper.EmployeeMapper;
 import com.tenji.adminapi2.model.Employee;
 import com.tenji.adminapi2.service.EmployeeService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -39,6 +40,10 @@ public class EmployeeServiceImpl implements EmployeeService {
         if(employee != null) {
             return result.code(ApiResponseCode.status_1.getCode()).message("社员已存在");
         }
+        employee = employeeMapper.selectByEmployeeId(dto.getEmployeeid());
+        if(employee != null) {
+            return result.code(ApiResponseCode.status_1.getCode()).message("社员已存在");
+        }
         Employee newEmployee = new Employee();
         BeanUtils.copyProperties(dto, newEmployee);
         newEmployee.setCreatedate(new Date());
@@ -49,8 +54,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     public ApiResponse<Object> queryEmployee(HttpServletRequest request) {
         String employeeId = request.getParameter("employeeId");
-        Employee employee = employeeMapper.selectByEmployeeId(employeeId);
         ApiResponse<Object> result = new ApiResponse<Object>("success");
+        if(StringUtils.isEmpty(employeeId)) {
+            return result.data(employeeMapper.selectAll());
+        }
+        Employee employee = employeeMapper.selectByEmployeeId(employeeId);
         return result.data(employee);
     }
 }
