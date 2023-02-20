@@ -128,4 +128,18 @@ public class ApiResponse<T> {
     public void setData(T data) {
         this.data = data;
     }
+
+    public ApiResponse data(T data) {
+        this.data = data;
+        return this;
+    }
+    public ApiResponse code(Integer code) {
+        this.code = code;
+        return this;
+    }
+
+    public ApiResponse message(String message) {
+        this.message = message;
+        return this;
+    }
 }

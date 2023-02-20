@@ -6,7 +6,9 @@ import org.springframework.context.annotation.Bean;
 
 import javax.servlet.http.HttpServletRequest;
 
+
 public interface EmployeeService {
 
+    @Bean
     ApiResponse<String> addEmployee(EmployeeDto dto, HttpServletRequest request);
 }
