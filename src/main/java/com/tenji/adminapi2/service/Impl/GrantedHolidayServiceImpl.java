@@ -2,10 +2,16 @@ package com.tenji.adminapi2.service.Impl;
 
 import com.tenji.adminapi2.api.ApiResponseCode;
 import com.tenji.adminapi2.dto.GrantedHolidayForm;
+import com.tenji.adminapi2.dto.GrantedHolidayVo;
+import com.tenji.adminapi2.dto.UserInfo;
+import com.tenji.adminapi2.dto.UserInfoHolder;
+import com.tenji.adminapi2.dto.config.MasterClassCode;
 import com.tenji.adminapi2.exception.ApiException;
+import com.tenji.adminapi2.exception.BizException;
+import com.tenji.adminapi2.mapper.EmployeeMapper;
 import com.tenji.adminapi2.mapper.GrantedHolidayMapper;
 import com.tenji.adminapi2.entity.GrantedHoliday;
-import com.tenji.adminapi2.model.GrantedHolidayModel;
+import com.tenji.adminapi2.model.Employee;
 import com.tenji.adminapi2.service.GrantedHolidayService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +19,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -23,37 +32,91 @@ public class GrantedHolidayServiceImpl implements GrantedHolidayService {
     @Autowired
     GrantedHolidayMapper grantedHolidayMapper;
 
+    @Autowired
+    private   EmployeeMapper employeeMapper;
+
     @Override
-    public List<GrantedHolidayModel> getByEmployeeId(String employeeId) {
+    public List<GrantedHolidayVo> getByEmployeeId(Integer employeeId) {
         return grantedHolidayMapper.getByEmployeeId(employeeId);
     }
 
     @Override
-    public GrantedHolidayModel getById(long id) {
+    public GrantedHolidayVo getById(long id) {
         return grantedHolidayMapper.getById(id);
     }
 
     @Override
     public int add(GrantedHolidayForm grantedHolidayForm){
-        GrantedHoliday grantedHoliday = new GrantedHoliday();
-        grantedHoliday.setUserId(grantedHolidayForm.getUserId());
-        grantedHoliday.setEmployeeId(grantedHolidayForm.getEmployeeId());
-        grantedHoliday.setGrantedServiceYears(grantedHolidayForm.getGrantedServiceYears());
-        grantedHoliday.setGrantedDate(grantedHolidayForm.getGrantedDate());
-        grantedHoliday.setExpiryDate(grantedHolidayForm.getExpiryDate());
-        grantedHoliday.setCarryoverExpiryDate(grantedHolidayForm.getCarryoverExpiryDate());
-        grantedHoliday.setStatusCode(grantedHolidayForm.getStatusCode());
-        grantedHoliday.setGrantedDays(grantedHolidayForm.getGrantedDays());
-        grantedHoliday.setUsedDays(grantedHolidayForm.getUsedDays());
-        grantedHoliday.setUnusedDays(grantedHolidayForm.getUnusedDays());
-        grantedHoliday.setRemainingDays(grantedHolidayForm.getRemainingDays());
 
-        Date createTime = new Date();
-        grantedHoliday.setCreateTime(createTime);
-        grantedHoliday.setUpdateTime(createTime);
+        Employee employee =employeeMapper.selectByEmployeeId(grantedHolidayForm.getEmployeeId());
+        if(Objects.isNull(employee)){
+            throw new BizException("社員データはありません。");
+        }
+        int returnNum=0;
+        try{
+            GrantedHoliday grantedHoliday = new GrantedHoliday();
 
-        return grantedHolidayMapper.insert(grantedHoliday);
+            UserInfo userInfo= UserInfoHolder.get();
+            grantedHoliday.setUserId(userInfo.getUserId());
+
+            grantedHoliday.setEmployeeId(grantedHolidayForm.getEmployeeId());
+            Date grantedDate=grantedHolidayForm.getGrantedDate();
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Calendar    calendar =Calendar.getInstance();
+            calendar.setTime(grantedDate);
+            calendar.add(Calendar.YEAR,1);
+            Date expiryDate =calendar.getTime();
+            calendar.add(Calendar.YEAR,1);
+            Date carryOverExpiryDate =calendar.getTime();
+
+            grantedHoliday.setGrantedDate(grantedHolidayForm.getGrantedDate());
+
+            grantedHoliday.setExpiryDate(expiryDate);
+            grantedHoliday.setCarryoverExpiryDate(carryOverExpiryDate);
+
+            Date nowDate = new Date();
+            Date employeeDate = employee.getEmploydate();
+            Calendar bef = Calendar.getInstance();
+            Calendar aft = Calendar.getInstance();
+
+            bef.setTime(simpleDateFormat.parse(simpleDateFormat.format(employeeDate)));
+            aft.setTime(simpleDateFormat.parse(simpleDateFormat.format(nowDate)));
+            int year = aft.get(Calendar.YEAR) - bef.get(Calendar.YEAR);
+
+            grantedHoliday.setGrantedServiceYears(year);
+
+
+            grantedHoliday.setStatusCode(MasterClassCode.GHST02.getCode());
+
+            grantedHoliday.setGrantedDays(grantedHolidayForm.getGrantedDays());
+
+            grantedHoliday.setUsedDays(0);
+            grantedHoliday.setUnusedDays(grantedHolidayForm.getGrantedDays());
+            grantedHoliday.setRemainingDays(grantedHolidayForm.getGrantedDays());
+
+            grantedHoliday.setCreateTime(nowDate);
+            grantedHoliday.setUpdateTime(nowDate);
+
+            returnNum=  grantedHolidayMapper.insert(grantedHoliday);
+            if(returnNum >0){
+
+            }
+        }catch (Exception e){
+            throw  new BizException(e.getMessage());
+        }
+        return returnNum;
     }
+
+
+    private  void checkExpiryDays(Integer employeeId){
+        grantedHolidayMapper.getByEmployeeId(employeeId);
+
+
+    }
+
+
+
+
 
     @Override
     public int updateStatus(long id, String statusCode) {
