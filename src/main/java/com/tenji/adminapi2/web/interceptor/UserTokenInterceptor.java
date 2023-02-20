@@ -29,8 +29,8 @@ public class UserTokenInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         // 获取请求携带的令牌
-       // String token = request.getHeader("UserToken");
-        String token = request.getParameter("token");
+        String token = request.getHeader("UserToken");
+      //  String token = request.getParameter("token");
 
         if (StringUtils.isNotBlank(token)) {
             UserToken userToken = userTokenService.getByToken(token);
