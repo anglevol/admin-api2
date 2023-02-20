@@ -2,7 +2,6 @@ package com.tenji.adminapi2.service.Impl;
 
 import com.tenji.adminapi2.api.ApiResponseCode;
 import com.tenji.adminapi2.dto.GrantedHolidayForm;
-import com.tenji.adminapi2.dto.GrantedHolidayVo;
 import com.tenji.adminapi2.dto.UserInfo;
 import com.tenji.adminapi2.dto.UserInfoHolder;
 import com.tenji.adminapi2.dto.config.MasterClassCode;
@@ -10,8 +9,8 @@ import com.tenji.adminapi2.exception.ApiException;
 import com.tenji.adminapi2.exception.BizException;
 import com.tenji.adminapi2.mapper.EmployeeMapper;
 import com.tenji.adminapi2.mapper.GrantedHolidayMapper;
-import com.tenji.adminapi2.entity.GrantedHoliday;
 import com.tenji.adminapi2.model.Employee;
+import com.tenji.adminapi2.model.GrantedHoliday;
 import com.tenji.adminapi2.service.GrantedHolidayService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,19 +35,19 @@ public class GrantedHolidayServiceImpl implements GrantedHolidayService {
     private   EmployeeMapper employeeMapper;
 
     @Override
-    public List<GrantedHolidayVo> getByEmployeeId(Integer employeeId) {
-        return grantedHolidayMapper.getByEmployeeId(employeeId);
+    public List<GrantedHoliday> getByEmployeeId(long employeeId) {
+        return grantedHolidayMapper.selectByEmployeeId(employeeId);
     }
 
     @Override
-    public GrantedHolidayVo getById(long id) {
-        return grantedHolidayMapper.getById(id);
+    public GrantedHoliday getById(long id) {
+        return grantedHolidayMapper.selectByPrimaryKey(id);
     }
 
     @Override
     public int add(GrantedHolidayForm grantedHolidayForm){
 
-        Employee employee =employeeMapper.selectByEmployeeId(grantedHolidayForm.getEmployeeId());
+        Employee employee =employeeMapper.selectByPrimaryKey(grantedHolidayForm.getEmployeeId());
         if(Objects.isNull(employee)){
             throw new BizException("社員データはありません。");
         }
@@ -81,7 +80,7 @@ public class GrantedHolidayServiceImpl implements GrantedHolidayService {
 
             bef.setTime(simpleDateFormat.parse(simpleDateFormat.format(employeeDate)));
             aft.setTime(simpleDateFormat.parse(simpleDateFormat.format(nowDate)));
-            int year = aft.get(Calendar.YEAR) - bef.get(Calendar.YEAR);
+            float year = aft.get(Calendar.YEAR) - bef.get(Calendar.YEAR);
 
             grantedHoliday.setGrantedServiceYears(year);
 
@@ -109,39 +108,31 @@ public class GrantedHolidayServiceImpl implements GrantedHolidayService {
 
 
     private  void checkExpiryDays(Integer employeeId){
-        grantedHolidayMapper.getByEmployeeId(employeeId);
+//        grantedHolidayMapper.getByEmployeeId(employeeId);
 
 
     }
 
-
-
-
-
-    @Override
-    public int updateStatus(long id, String statusCode) {
-        return grantedHolidayMapper.updateStatus(id, statusCode);
-    }
 
     @Transactional
     @Override
-    public int takeHoliday(long id, int holiday) {
+    public int takeHoliday(long id, int days) {
 
-        GrantedHoliday grantedHoliday = grantedHolidayMapper.getEntityById(id);
-        if(grantedHoliday.getUnusedDays() < holiday){
+        GrantedHoliday grantedHoliday = grantedHolidayMapper.selectByPrimaryKey(id);
+        if(grantedHoliday.getUnusedDays() < days){
             throw new ApiException(ApiResponseCode.status_102,"申請した有給休暇日数は未消化日数より多い!!!");
         }
 
         try {
-            int reduceCount = grantedHolidayMapper.reduceHoliday(id,holiday);
+            int reduceCount = grantedHolidayMapper.reduceHoliday(id,days);
 
             if(reduceCount == 1){
-                grantedHoliday = grantedHolidayMapper.getEntityById(id);
+                grantedHoliday = grantedHolidayMapper.selectByPrimaryKey(id);
                 if(grantedHoliday.getRemainingDays() < 0){//
                     throw new ApiException(ApiResponseCode.status_103);
                 } else if (grantedHoliday.getRemainingDays() == 0) {
                     //TODO [状態/status]カプセル化
-                    int updateCount = grantedHolidayMapper.updateStatus(id, "GHST05");//状態コード：消化済
+                    int updateCount = grantedHolidayMapper.updateStatusById(id, "GHST05");//状態コード：消化済
 
                     if (updateCount == 1) {
                         return 1;

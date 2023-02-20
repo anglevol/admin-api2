@@ -4,6 +4,7 @@ import com.tenji.adminapi2.api.ApiResponse;
 import com.tenji.adminapi2.dto.GrantedHolidayForm;
 import com.tenji.adminapi2.dto.GrantedHolidayVo;
 import com.tenji.adminapi2.dto.TakeHolidayForm;
+import com.tenji.adminapi2.model.GrantedHoliday;
 import com.tenji.adminapi2.service.GrantedHolidayService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -17,10 +18,10 @@ public class GrantedHolidayController {
     GrantedHolidayService grantedHolidayService;
 
     @RequestMapping(value = "/{id}",method = RequestMethod.GET)
-    public ApiResponse<GrantedHolidayVo> getGrantedHoliday(@PathVariable long id){
+    public ApiResponse<GrantedHoliday> getGrantedHoliday(@PathVariable long id){
 
-        GrantedHolidayVo grantedHolidayVo = grantedHolidayService.getById(id);
-        return new ApiResponse<>(grantedHolidayVo);
+        GrantedHoliday grantedHoliday = grantedHolidayService.getById(id);
+        return new ApiResponse<>(grantedHoliday);
 
     }
 
@@ -28,14 +29,6 @@ public class GrantedHolidayController {
     public ApiResponse<Integer> addGrantedHoliday(@RequestBody GrantedHolidayForm grantedHolidayForm){
         int row = grantedHolidayService.add(grantedHolidayForm);
         return new ApiResponse<>(row);
-
-    }
-
-    @RequestMapping(value = "/changeStatus",method = RequestMethod.POST)
-    public ApiResponse<Integer> changeStatus(@RequestBody GrantedHolidayForm grantedHolidayForm){
-
-        int updateRow = grantedHolidayService.updateStatus(grantedHolidayForm.getId(),grantedHolidayForm.getStatusCode());
-        return new ApiResponse<>(updateRow);
 
     }
 

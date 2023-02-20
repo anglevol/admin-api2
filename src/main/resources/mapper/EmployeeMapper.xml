@@ -2,9 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.tenji.adminapi2.mapper.EmployeeMapper">
   <resultMap id="BaseResultMap" type="com.tenji.adminapi2.model.Employee">
-    <id column="id" jdbcType="INTEGER" property="id" />
+    <id column="id" jdbcType="BIGINT" property="id" />
     <result column="employee_id" jdbcType="VARCHAR" property="employeeid" />
-    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="department_code" jdbcType="VARCHAR" property="departmentCode" />
     <result column="gender" jdbcType="INTEGER" property="gender" />
@@ -18,24 +18,24 @@
     id, employee_id, user_id, name, department_code, gender, employdate, remaining_days,
     comment, createdate, updatedate
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
     <include refid="Base_Column_List" />
     from employee
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from employee
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.tenji.adminapi2.model.Employee">
     insert into employee (id, employee_id, user_id,
-      name, department_code, gender, 
-      employdate, remaining_days, comment, 
+      name, department_code, gender,
+      employdate, remaining_days, comment,
       createdate, updatedate)
-    values (#{id,jdbcType=INTEGER}, #{employeeid,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, 
+    values (#{id,jdbcType=BIGINT}, #{employeeid,jdbcType=VARCHAR}, #{userId,jdbcType=BIGINT},
       #{name,jdbcType=VARCHAR}, #{departmentCode,jdbcType=VARCHAR}, #{gender,jdbcType=INTEGER},
-      #{employdate,jdbcType=DATE}, #{remainingDays,jdbcType=INTEGER}, #{comment,jdbcType=VARCHAR}, 
+      #{employdate,jdbcType=DATE}, #{remainingDays,jdbcType=INTEGER}, #{comment,jdbcType=VARCHAR},
       #{createdate,jdbcType=DATE}, #{updatedate,jdbcType=DATE})
   </insert>
   <insert id="insertSelective" parameterType="com.tenji.adminapi2.model.Employee">
@@ -77,13 +77,13 @@
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
-        #{id,jdbcType=INTEGER},
+        #{id,jdbcType=BIGINT},
       </if>
       <if test="employeeid != null">
         #{employee_id,jdbcType=VARCHAR},
       </if>
       <if test="userId != null">
-        #{userId,jdbcType=INTEGER},
+        #{userId,jdbcType=BIGINT},
       </if>
       <if test="name != null">
         #{name,jdbcType=VARCHAR},
@@ -118,7 +118,7 @@
         employee_id = #{employeeid,jdbcType=VARCHAR},
       </if>
       <if test="userId != null">
-        user_id = #{userId,jdbcType=INTEGER},
+        user_id = #{userId,jdbcType=BIGINT},
       </if>
       <if test="name != null">
         name = #{name,jdbcType=VARCHAR},
@@ -150,7 +150,7 @@
   <update id="updateByPrimaryKey" parameterType="com.tenji.adminapi2.model.Employee">
     update employee
     set employee_id = #{employeeid,jdbcType=VARCHAR},
-      user_id = #{userId,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=BIGINT},
       name = #{name,jdbcType=VARCHAR},
       department_code = #{departmentCode,jdbcType=VARCHAR},
       gender = #{gender,jdbcType=INTEGER},
@@ -161,11 +161,11 @@
       updatedate = #{updatedate,jdbcType=DATE}
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <select id="selectByUserId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  <select id="selectByUserId" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from employee
-    where user_Id = #{userId,jdbcType=INTEGER}
+    where user_Id = #{userId,jdbcType=BIGINT}
   </select>
   <select id="selectByName" parameterType="java.lang.String" resultMap="BaseResultMap">
     select
