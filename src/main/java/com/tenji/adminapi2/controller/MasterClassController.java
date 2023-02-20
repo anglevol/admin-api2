@@ -1,7 +1,7 @@
 package com.tenji.adminapi2.controller;
 
 import com.tenji.adminapi2.api.ApiResponse;
-import com.tenji.adminapi2.model.MasterClassModel;
+import com.tenji.adminapi2.dto.MasterClassVo;
 import com.tenji.adminapi2.service.MasterClassService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -16,9 +16,9 @@ public class MasterClassController {
     MasterClassService masterClassService;
 
     @RequestMapping(value = "/type/{type}",method = RequestMethod.GET)
-    public ApiResponse<List<MasterClassModel>> getMasterClassByType(@PathVariable String type){
-        List<MasterClassModel> masterClassModels = masterClassService.getByType(type);
-        return new ApiResponse<>(masterClassModels);
+    public ApiResponse<List<MasterClassVo>> getMasterClassByType(@PathVariable String type){
+        List<MasterClassVo> masterClassVos = masterClassService.getByType(type);
+        return new ApiResponse<>(masterClassVos);
     }
 
 }

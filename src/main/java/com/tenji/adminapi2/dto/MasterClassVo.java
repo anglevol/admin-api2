@@ -1,9 +1,9 @@
-package com.tenji.adminapi2.model;
+package com.tenji.adminapi2.dto;
 
 import lombok.Data;
 
 @Data
-public class MasterClassModel {
+public class MasterClassVo {
     //種類
     private String type;
     //種類和名
