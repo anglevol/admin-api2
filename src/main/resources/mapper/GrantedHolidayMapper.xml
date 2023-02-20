@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper  namespace="com.tenji.adminapi2.mapper.GrantedHolidayMapper">
 
-    <select id="getById" resultType="com.tenji.adminapi2.model.GrantedHolidayModel">
+    <select id="getById" resultType="com.tenji.adminapi2.dto.GrantedHolidayVo">
         select
             gh.id,
             e.employee_id,
@@ -33,14 +33,14 @@
             gh.id=#{id}
     </select>
 
-    <select id="getEntityById" resultType="com.tenji.adminapi2.entity.GrantedHoliday">
+    <select id="getEntityById" resultType="com.tenji.adminapi2.model.GrantedHoliday">
         select *
         from granted_holiday
         where
             id=#{id}
     </select>
 
-    <select id="getByEmployeeId" resultType="com.tenji.adminapi2.model.GrantedHolidayModel">
+    <select id="getByEmployeeId" resultType="com.tenji.adminapi2.dto.GrantedHolidayVo">
         select
             gh.id,
             e.employee_id,
@@ -71,7 +71,7 @@
             gh.employee_id=#{employeeId}
     </select>
 
-    <select id="getByStatusCode" resultType="com.tenji.adminapi2.model.GrantedHolidayModel">
+    <select id="getByStatusCode" resultType="com.tenji.adminapi2.dto.GrantedHolidayVo">
         select
             gh.id,
             e.employee_id,
@@ -102,7 +102,7 @@
             gh.status_code = #{statusCode}
     </select>
 
-    <insert id="insert" parameterType="com.tenji.adminapi2.entity.GrantedHoliday">
+    <insert id="insert" parameterType="com.tenji.adminapi2.model.GrantedHoliday">
         insert ignore into granted_holiday(
             user_id,
             employee_id,

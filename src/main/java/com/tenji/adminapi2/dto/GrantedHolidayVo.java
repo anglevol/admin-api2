@@ -1,15 +1,16 @@
-package com.tenji.adminapi2.model;
+package com.tenji.adminapi2.dto;
 
 import lombok.Data;
 
 import java.util.Date;
 
 @Data
-public class GrantedHolidayModel {
+public class GrantedHolidayVo {
+
     //ID
     private long id;
     //社員ID
-    private String employeeId;
+    private Integer employeeId;
     //社員氏名
     private String employeeName;
     //部署

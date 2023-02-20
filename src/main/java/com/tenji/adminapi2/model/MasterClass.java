@@ -1,4 +1,4 @@
-package com.tenji.adminapi2.entity;
+package com.tenji.adminapi2.model;
 
 import lombok.Data;
 

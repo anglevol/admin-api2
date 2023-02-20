@@ -1,7 +1,7 @@
 package com.tenji.adminapi2.mapper;
 
+import com.tenji.adminapi2.dto.GrantedHolidayVo;
 import com.tenji.adminapi2.entity.GrantedHoliday;
-import com.tenji.adminapi2.model.GrantedHolidayModel;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -10,11 +10,11 @@ import java.util.List;
 @Mapper
 public interface GrantedHolidayMapper {
 
-    List<GrantedHolidayModel> getByEmployeeId(@Param("employeeId") String employeeId);
+    List<GrantedHolidayVo> getByEmployeeId(@Param("employeeId") Integer employeeId);
 
-    List<GrantedHolidayModel> getByStatusCode(@Param("statusCode") String statusCode);
+    List<GrantedHolidayVo> getByStatusCode(@Param("statusCode") String statusCode);
 
-    GrantedHolidayModel getById(@Param("id") long id);
+    GrantedHolidayVo getById(@Param("id") long id);
 
     GrantedHoliday getEntityById(@Param("id") long id);
 
