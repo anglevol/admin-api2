@@ -142,4 +142,149 @@
         where
             id = #{id}
     </update>
+    <select id="getActiveDataByEmployeeId" resultType="com.tenji.adminapi2.model.GrantedHoliday" >
+        select
+          *
+        from granted_holiday gh
+        inner join master_class status
+        on gh.status_code = status.code
+        and status.type = 'GHST'
+        where
+            (status.value='有効' or status.value='繰越') and
+            gh.employee_id=#{employeeId}
+    </select>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.tenji.adminapi2.model.GrantedHoliday">
+        update granted_holiday
+        <set>
+            <if test="userId != null">
+                user_id = #{employeeId,jdbcType=BIGINT},
+            </if>
+            <if test="statusCode != null">
+                status_code = #{statusCode,jdbcType=VARCHAR},
+            </if>
+            <if test="days != null">
+                days = #{days,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+
+
+    <update id="updateBatchSelective" parameterType="java.util.List">
+        <!--@mbg.generated-->
+        update granted_holiday
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="user_id = case" suffix="end,">
+                <foreach collection="list" index="index" item="item">
+                    <if test="item.userId != null">
+                        when id = #{item.id,jdbcType=BIGINT} then #{item.userId,jdbcType=BIGINT}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="`employee_id` = case" suffix="end,">
+                <foreach collection="list" index="index" item="item">
+                    <if test="item.employeeId != null">
+                        when id = #{item.id,jdbcType=BIGINT} then #{item.employeeId,jdbcType=BIGINT}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="`granted_service_years` = case" suffix="end,">
+                <foreach collection="list" index="index" item="item">
+                    <if test="item.grantedServiceYears != null">
+                        when id = #{item.id,jdbcType=BIGINT} then #{item.grantedServiceYears,jdbcType=FLOAT}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="`granted_date` = case" suffix="end,">
+                <foreach collection="list" index="index" item="item">
+                    <if test="item.grantedDate != null">
+                        when id = #{item.id,jdbcType=BIGINT} then #{item.grantedDate,jdbcType=TIMESTAMP}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="`expiry_date` = case" suffix="end,">
+                <foreach collection="list" index="index" item="item">
+                    <if test="item.expiryDate != null">
+                        when id = #{item.id,jdbcType=BIGINT} then #{item.expiryDate,jdbcType=TIMESTAMP}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="`carryover_expiry_date` = case" suffix="end,">
+                <foreach collection="list" index="index" item="item">
+                    <if test="item.carryoverExpiryDate != null">
+                        when id = #{item.id,jdbcType=BIGINT} then #{item.carryoverExpiryDate,jdbcType=TIMESTAMP}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="`status_code` = case" suffix="end,">
+                <foreach collection="list" index="index" item="item">
+                    <if test="item.statusCode != null">
+                        when id = #{item.id,jdbcType=BIGINT} then #{item.statusCode,jdbcType=VARCHAR}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="`granted_days` = case" suffix="end,">
+                <foreach collection="list" index="index" item="item">
+                    <if test="item.grantedDays != null">
+                        when id = #{item.id,jdbcType=BIGINT} then #{item.grantedDays,jdbcType=INTEGER}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="`used_days` = case" suffix="end,">
+                <foreach collection="list" index="index" item="item">
+                    <if test="item.usedDays != null">
+                        when id = #{item.id,jdbcType=BIGINT} then #{item.usedDays,jdbcType=INTEGER}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="`unused_days` = case" suffix="end,">
+                <foreach collection="list" index="index" item="item">
+                    <if test="item.unusedDays != null">
+                        when id = #{item.id,jdbcType=BIGINT} then #{item.unusedDays,jdbcType=INTEGER}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="`remaining_days` = case" suffix="end,">
+                <foreach collection="list" index="index" item="item">
+                    <if test="item.remainingDays != null">
+                        when id = #{item.id,jdbcType=BIGINT} then #{item.remainingDays,jdbcType=INTEGER}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="`create_time` = case" suffix="end,">
+                <foreach collection="list" index="index" item="item">
+                    <if test="item.createTime != null">
+                        when id = #{item.id,jdbcType=BIGINT} then #{item.createTime,jdbcType=TIMESTAMP}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="`create_time` = case" suffix="end,">
+                <foreach collection="list" index="index" item="item">
+                    <if test="item.createTime != null">
+                        when id = #{item.id,jdbcType=BIGINT} then #{item.createTime,jdbcType=TIMESTAMP}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="`update_time` = case" suffix="end,">
+                <foreach collection="list" index="index" item="item">
+                    <if test="item.updateTime != null">
+                        when id = #{item.id,jdbcType=BIGINT} then #{item.updateTime,jdbcType=TIMESTAMP}
+                    </if>
+                </foreach>
+            </trim>
+        </trim>
+        where id in
+        <foreach close=")" collection="list" item="item" open="(" separator=", ">
+            #{item.id,jdbcType=BIGINT}
+        </foreach>
+    </update>
+
+
+
+
 </mapper>

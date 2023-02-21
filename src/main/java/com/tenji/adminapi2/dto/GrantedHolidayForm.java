@@ -11,7 +11,7 @@ public class GrantedHolidayForm {
     //管理者ID
   //  private long userId;
     //社員ID
-    private String employeeId;
+    private Integer employeeId;
     //付与時社歴
  //   private float grantedServiceYears;
     //付与年

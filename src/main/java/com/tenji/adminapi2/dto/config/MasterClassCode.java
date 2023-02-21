@@ -2,11 +2,13 @@ package com.tenji.adminapi2.dto.config;
 
 public enum MasterClassCode {
 
-    GHST01("GHST01", "未開始"),
-    GHST02("GHST02", "有効"),
-    GHST03("GHST03", "繰越"),
-    GHST04("GHST04", "失効"),
-    GHST05("GHST05", "消化済");
+    GHST01("未開始", ""),
+    GHST02("有効", ""),
+    GHST03("繰越", ""),
+    GHST04("失効", ""),
+    GHST05("消化済", ""),
+    MASTER_TYPE1("GHST",""),
+    MASTER_TYPE2("DPT","");
 
     private String code;
 
