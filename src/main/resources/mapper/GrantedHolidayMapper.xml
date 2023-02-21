@@ -230,7 +230,7 @@
         on gh.status_code = status.code
         and status.type = 'GHST'
         where
-            (status.value='有効' or status.value='繰越') and
+            (status.code='GHST02' or status.code='GHST03') and
             gh.employee_id=#{employeeId}
     </select>
 

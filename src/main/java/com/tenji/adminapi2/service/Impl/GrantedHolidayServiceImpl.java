@@ -87,7 +87,7 @@ public class GrantedHolidayServiceImpl implements GrantedHolidayService {
 
             grantedHoliday.setGrantedServiceYears(year);
 
-            MasterClass masterClass= masterClassMapper.getByTypeAndValue(MasterClassCode.MASTER_TYPE1.getCode(),MasterClassCode.GHST02.getCode());
+            MasterClass masterClass= masterClassMapper.getByTypeAndCode(MasterClassCode.MASTER_TYPE1.getCode(),MasterClassCode.GHST02.getCode());
             if(Objects.isNull(masterClass)){
                 throw new BizException("master code データはありません。");
             }
@@ -118,8 +118,12 @@ public class GrantedHolidayServiceImpl implements GrantedHolidayService {
         List<GrantedHoliday> expiryList = new ArrayList<>();
         List<GrantedHoliday> carryOverExpiryList = new ArrayList<>();
         if(Objects.nonNull(voList) && voList.size()>0){
-            MasterClass masterClassExpiry= masterClassMapper.getByTypeAndValue(MasterClassCode.MASTER_TYPE1.getCode(),MasterClassCode.GHST04.getCode());
-            MasterClass masterClassCarryOver= masterClassMapper.getByTypeAndValue(MasterClassCode.MASTER_TYPE1.getCode(),MasterClassCode.GHST03.getCode());
+            MasterClass masterClassExpiry= masterClassMapper.getByTypeAndCode(MasterClassCode.MASTER_TYPE1.getCode(),MasterClassCode.GHST04.getCode());
+            MasterClass masterClassCarryOver= masterClassMapper.getByTypeAndCode(MasterClassCode.MASTER_TYPE1.getCode(),MasterClassCode.GHST03.getCode());
+
+            if(Objects.isNull(masterClassExpiry) || Objects.isNull(masterClassCarryOver) ){
+                throw new BizException("master code データはありません。");
+            }
             UserInfo userInfo= UserInfoHolder.get();
             Date now = new Date();
 

@@ -14,5 +14,5 @@ public interface MasterClassMapper {
 
     int insert(MasterClass masterClass);
 
-    MasterClass getByTypeAndValue(@Param("type") String type,@Param("value") String value);
+    MasterClass getByTypeAndCode(@Param("type") String type,@Param("code") String code);
 }

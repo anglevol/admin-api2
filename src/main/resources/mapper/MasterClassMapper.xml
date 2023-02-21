@@ -92,9 +92,9 @@
   </update>
 
 
-<select id="getByTypeAndValue" resultType="com.tenji.adminapi2.model.MasterClass">
+<select id="getByTypeAndCode" resultType="com.tenji.adminapi2.model.MasterClass">
 select * from   master_class
-where type =#{type,jdbcType=VARCHAR} and value=#{value,jdbcType=VARCHAR}
+where type =#{type,jdbcType=VARCHAR} and code=#{code,jdbcType=VARCHAR}
 
 </select>
 
