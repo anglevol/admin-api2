@@ -8,12 +8,11 @@ import com.tenji.adminapi2.dto.config.MasterClassCode;
 import com.tenji.adminapi2.exception.ApiException;
 import com.tenji.adminapi2.exception.BizException;
 import com.tenji.adminapi2.mapper.EmployeeMapper;
+import com.tenji.adminapi2.mapper.GrantedHolidayLogMapper;
 import com.tenji.adminapi2.mapper.GrantedHolidayMapper;
-import com.tenji.adminapi2.model.GrantedHoliday;
+import com.tenji.adminapi2.model.*;
 import com.tenji.adminapi2.mapper.MasterClassMapper;
-import com.tenji.adminapi2.model.Employee;
 import com.tenji.adminapi2.model.GrantedHoliday;
-import com.tenji.adminapi2.model.MasterClass;
 import com.tenji.adminapi2.service.GrantedHolidayService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +35,9 @@ public class GrantedHolidayServiceImpl implements GrantedHolidayService {
 
     @Autowired
     private MasterClassMapper masterClassMapper;
+
+    @Autowired
+    private GrantedHolidayLogMapper grantedHolidayLogMapper;
 
     @Override
     public List<GrantedHoliday> getByEmployeeId(long employeeId) {
@@ -104,6 +106,22 @@ public class GrantedHolidayServiceImpl implements GrantedHolidayService {
 
             returnNum=  grantedHolidayMapper.insert(grantedHoliday);
             if(returnNum >0){
+             int days=  grantedHolidayMapper.countActiveDays(grantedHolidayForm.getEmployeeId());
+                employee.setRemainingDays(days);
+                employee.setUpdatedate(nowDate);
+               int i= employeeMapper.updateByPrimaryKey(employee);
+                if(i<=0){
+                    throw new BizException("employeeテーブル更新は失敗しました");
+                }
+                GrantedHolidayLog log = new GrantedHolidayLog();
+                log.setEmployeeId(employee.getId());
+                log.setStatusCode(MasterClassCode.HOLIDAYLOGTYPE1.getCode());
+                log.setDays(grantedHolidayForm.getGrantedDays());
+                log.setCreateTime(nowDate);
+               int j= grantedHolidayLogMapper.insertSelective(log);
+               if(j<=0){
+                   throw new BizException("LOGテーブル更新は失敗しました");
+               }
                 checkExpiryDays(grantedHolidayForm.getEmployeeId());
             }
         }catch (Exception e){

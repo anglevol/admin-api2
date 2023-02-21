@@ -8,7 +8,9 @@ public enum MasterClassCode {
     GHST04("GHST04", "失効"),
     GHST05("GHST05", "消化済"),
     MASTER_TYPE1("GHST",""),
-    MASTER_TYPE2("DPT","");
+    MASTER_TYPE2("DPT",""),
+    HOLIDAYLOGTYPE1("1","付与"),
+    HOLIDAYLOGTYPE2("2","消化");
 
     private String code;
 

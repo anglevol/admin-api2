@@ -342,4 +342,10 @@
             #{item.id,jdbcType=BIGINT}
         </foreach>
     </update>
+    <select id="countActiveDays" resultType="java.lang.Integer">
+        select sum(remaining_days)
+        from granted_holiday where employee_id=#{employeeId,jdbcType=BIGINT} and (status_code ="GHST02" or status_code ="GHST03")
+    </select>
+
+
 </mapper>
