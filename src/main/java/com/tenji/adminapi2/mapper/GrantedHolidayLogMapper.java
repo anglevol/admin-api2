@@ -3,6 +3,8 @@ package com.tenji.adminapi2.mapper;
 import com.tenji.adminapi2.model.GrantedHolidayLog;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 @Mapper
 public interface GrantedHolidayLogMapper {
     int deleteByPrimaryKey(Integer id);
@@ -16,4 +18,6 @@ public interface GrantedHolidayLogMapper {
     int updateByPrimaryKeySelective(GrantedHolidayLog record);
 
     int updateByPrimaryKey(GrantedHolidayLog record);
+
+    List<GrantedHolidayLog> selectByEmployeeId(long employeeId);
 }

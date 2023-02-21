@@ -52,4 +52,16 @@ public class GrantedHolidayController {
         return new ApiResponse<>(updateRow);
 
     }
+
+    @RequestMapping(value = "/logs/{employeeId}",method = RequestMethod.GET)
+    public ApiResponse<Object> getHolidayLogByEmployeeId(@PathVariable long employeeId){
+
+        HashMap<String, Object> holidays = new HashMap<>();
+        List<GrantedHoliday> grantedHolidays = grantedHolidayService.getByEmployeeId(employeeId);
+
+        holidays.put("total", grantedHolidays.size());
+        holidays.put("list", grantedHolidays);
+        return new ApiResponse<>(holidays);
+
+    }
 }
