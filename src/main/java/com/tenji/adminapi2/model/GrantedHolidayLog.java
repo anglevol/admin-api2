@@ -8,7 +8,7 @@ import java.util.Date;
 public class GrantedHolidayLog {
     private Integer id;
 
-    private Integer employeeId;
+    private Long employeeId;
 
     private String statusCode;
 

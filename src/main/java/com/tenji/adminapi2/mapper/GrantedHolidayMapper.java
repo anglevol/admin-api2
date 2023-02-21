@@ -32,4 +32,8 @@ public interface GrantedHolidayMapper {
 
     int updateBatchSelective(List<GrantedHoliday> list);
 
+
+    Integer countActiveDays(@Param("employeeId") Long employeeId);
+
+
 }
