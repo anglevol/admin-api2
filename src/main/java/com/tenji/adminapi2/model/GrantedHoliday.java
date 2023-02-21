@@ -6,15 +6,14 @@ import java.util.Date;
 
 @Data
 public class GrantedHoliday {
-    //ID
-    private long id;
-    //管理者ID
-    private long userId;
-    //社員ID
-    private long employeeId;
-    //付与時社歴
-    private float grantedServiceYears;
-    //付与年
+    private Long id;
+
+    private Long userId;
+
+    private Long employeeId;
+
+    private Float grantedServiceYears;
+
     private Date grantedDate;
     //基本失効日
     private Date expiryDate;
