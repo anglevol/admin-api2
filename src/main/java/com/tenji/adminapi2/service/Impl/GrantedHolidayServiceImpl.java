@@ -113,7 +113,7 @@ public class GrantedHolidayServiceImpl implements GrantedHolidayService {
     }
 
 
-    private  void checkExpiryDays(Integer employeeId){
+    private  void checkExpiryDays(Long employeeId){
         List<GrantedHoliday> voList=  grantedHolidayMapper.getActiveDataByEmployeeId(employeeId);
         List<GrantedHoliday> expiryList = new ArrayList<>();
         List<GrantedHoliday> carryOverExpiryList = new ArrayList<>();
@@ -150,10 +150,7 @@ public class GrantedHolidayServiceImpl implements GrantedHolidayService {
 
 
 
-    @Override
-    public int updateStatus(long id, String statusCode) {
-        return grantedHolidayMapper.updateStatus(id, statusCode);
-    }
+
 
     @Transactional
     @Override

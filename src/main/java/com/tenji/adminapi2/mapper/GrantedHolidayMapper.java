@@ -26,9 +26,9 @@ public interface GrantedHolidayMapper {
 
     int updateStatusById(long id, String statusCode);
 
-    List<GrantedHoliday> getActiveDataByEmployeeId(@Param("employeeId") Integer employeeId);
+    List<GrantedHoliday> getActiveDataByEmployeeId(@Param("employeeId") Long employeeId);
 
-    int updateByPrimaryKeySelective(GrantedHoliday grantedHoliday);
+
 
     int updateBatchSelective(List<GrantedHoliday> list);
 

@@ -234,27 +234,6 @@
             gh.employee_id=#{employeeId}
     </select>
 
-    <update id="updateByPrimaryKeySelective" parameterType="com.tenji.adminapi2.model.GrantedHoliday">
-        update granted_holiday
-        <set>
-            <if test="userId != null">
-                user_id = #{employeeId,jdbcType=BIGINT},
-            </if>
-            <if test="statusCode != null">
-                status_code = #{statusCode,jdbcType=VARCHAR},
-            </if>
-            <if test="days != null">
-                days = #{days,jdbcType=INTEGER},
-            </if>
-            <if test="createTime != null">
-                create_time = #{createTime,jdbcType=TIMESTAMP},
-            </if>
-        </set>
-        where id = #{id,jdbcType=INTEGER}
-    </update>
-
-
-
     <update id="updateBatchSelective" parameterType="java.util.List">
         <!--@mbg.generated-->
         update granted_holiday
@@ -363,18 +342,4 @@
             #{item.id,jdbcType=BIGINT}
         </foreach>
     </update>
-
-
-
-
-      update
-          granted_holiday
-      set
-          used_days = used_days + #{holiday},
-          unused_days = unused_days - #{holiday},
-          remaining_days = remaining_days - #{holiday},
-          update_time = now()
-      where
-          id = #{id}
-  </update>
 </mapper>
