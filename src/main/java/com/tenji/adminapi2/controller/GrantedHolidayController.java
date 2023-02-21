@@ -2,12 +2,14 @@ package com.tenji.adminapi2.controller;
 
 import com.tenji.adminapi2.api.ApiResponse;
 import com.tenji.adminapi2.dto.GrantedHolidayForm;
-import com.tenji.adminapi2.dto.GrantedHolidayVo;
 import com.tenji.adminapi2.dto.TakeHolidayForm;
 import com.tenji.adminapi2.model.GrantedHoliday;
 import com.tenji.adminapi2.service.GrantedHolidayService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.List;
 
 @RestController
 @RequestMapping("/granted")
@@ -25,6 +27,16 @@ public class GrantedHolidayController {
 
     }
 
+    @RequestMapping(value = "/list/{employeeId}",method = RequestMethod.GET)
+    public ApiResponse<Object> getHolidayList(@PathVariable long employeeId){
+
+        HashMap<String, Object> holidays = new HashMap<>();
+        List<GrantedHoliday> grantedHolidays = grantedHolidayService.getByEmployeeId(employeeId);
+        holidays.put("total", grantedHolidays.size());
+        holidays.put("list", grantedHolidays);
+        return new ApiResponse<>(holidays);
+
+    }
 
     @PostMapping("/add")
     public ApiResponse<Integer> addGrantedHoliday(@RequestBody GrantedHolidayForm grantedHolidayForm){
