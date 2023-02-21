@@ -12,7 +12,7 @@
     id, type, type_name, code, value
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from master_class
     where id = #{id,jdbcType=INTEGER}
@@ -22,9 +22,9 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.tenji.adminapi2.model.MasterClass">
-    insert into master_class (id, type, type_name, 
+    insert into master_class (id, type, type_name,
       code, value)
-    values (#{id,jdbcType=INTEGER}, #{type,jdbcType=VARCHAR}, #{typeName,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=INTEGER}, #{type,jdbcType=VARCHAR}, #{typeName,jdbcType=VARCHAR},
       #{code,jdbcType=VARCHAR}, #{value,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tenji.adminapi2.model.MasterClass">
@@ -90,4 +90,15 @@
       value = #{value,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+
+<select id="getByTypeAndCode" resultType="com.tenji.adminapi2.model.MasterClass">
+select * from   master_class
+where type =#{type,jdbcType=VARCHAR} and code=#{code,jdbcType=VARCHAR}
+
+</select>
+
+
+
+
 </mapper>

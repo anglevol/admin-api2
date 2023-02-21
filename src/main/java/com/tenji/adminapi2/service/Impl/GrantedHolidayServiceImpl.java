@@ -9,8 +9,11 @@ import com.tenji.adminapi2.exception.ApiException;
 import com.tenji.adminapi2.exception.BizException;
 import com.tenji.adminapi2.mapper.EmployeeMapper;
 import com.tenji.adminapi2.mapper.GrantedHolidayMapper;
+import com.tenji.adminapi2.model.GrantedHoliday;
+import com.tenji.adminapi2.mapper.MasterClassMapper;
 import com.tenji.adminapi2.model.Employee;
 import com.tenji.adminapi2.model.GrantedHoliday;
+import com.tenji.adminapi2.model.MasterClass;
 import com.tenji.adminapi2.service.GrantedHolidayService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -33,6 +33,9 @@ public class GrantedHolidayServiceImpl implements GrantedHolidayService {
 
     @Autowired
     private   EmployeeMapper employeeMapper;
+
+    @Autowired
+    private MasterClassMapper masterClassMapper;
 
     @Override
     public List<GrantedHoliday> getByEmployeeId(long employeeId) {
@@ -84,8 +87,11 @@ public class GrantedHolidayServiceImpl implements GrantedHolidayService {
 
             grantedHoliday.setGrantedServiceYears(year);
 
-
-            grantedHoliday.setStatusCode(MasterClassCode.GHST02.getCode());
+            MasterClass masterClass= masterClassMapper.getByTypeAndCode(MasterClassCode.MASTER_TYPE1.getCode(),MasterClassCode.GHST02.getCode());
+            if(Objects.isNull(masterClass)){
+                throw new BizException("master code データはありません。");
+            }
+            grantedHoliday.setStatusCode(masterClass.getCode());
 
             grantedHoliday.setGrantedDays(grantedHolidayForm.getGrantedDays());
 
@@ -98,7 +104,7 @@ public class GrantedHolidayServiceImpl implements GrantedHolidayService {
 
             returnNum=  grantedHolidayMapper.insert(grantedHoliday);
             if(returnNum >0){
-
+                checkExpiryDays(grantedHolidayForm.getEmployeeId());
             }
         }catch (Exception e){
             throw  new BizException(e.getMessage());
@@ -107,11 +113,47 @@ public class GrantedHolidayServiceImpl implements GrantedHolidayService {
     }
 
 
-    private  void checkExpiryDays(Integer employeeId){
-//        grantedHolidayMapper.getByEmployeeId(employeeId);
+    private  void checkExpiryDays(Long employeeId){
+        List<GrantedHoliday> voList=  grantedHolidayMapper.getActiveDataByEmployeeId(employeeId);
+        List<GrantedHoliday> expiryList = new ArrayList<>();
+        List<GrantedHoliday> carryOverExpiryList = new ArrayList<>();
+        if(Objects.nonNull(voList) && voList.size()>0){
+            MasterClass masterClassExpiry= masterClassMapper.getByTypeAndCode(MasterClassCode.MASTER_TYPE1.getCode(),MasterClassCode.GHST04.getCode());
+            MasterClass masterClassCarryOver= masterClassMapper.getByTypeAndCode(MasterClassCode.MASTER_TYPE1.getCode(),MasterClassCode.GHST03.getCode());
 
+            if(Objects.isNull(masterClassExpiry) || Objects.isNull(masterClassCarryOver) ){
+                throw new BizException("master code データはありません。");
+            }
+            UserInfo userInfo= UserInfoHolder.get();
+            Date now = new Date();
 
+            for (GrantedHoliday vo:voList) {
+                if(vo.getCarryoverExpiryDate().getTime() < now.getTime()){
+                    vo.setStatusCode(masterClassExpiry.getCode());
+                    vo.setRemainingDays(0);
+                    vo.setUpdateTime(now);
+                    vo.setUserId(userInfo.getUserId());
+                    expiryList.add(vo);
+                }else if( vo.getExpiryDate().getTime() < now.getTime()){
+                    vo.setStatusCode(masterClassCarryOver.getCode());
+                    vo.setUpdateTime(now);
+                    vo.setUserId(userInfo.getUserId());
+                    carryOverExpiryList.add(vo);
+                }
+            }
+        }
+        if(expiryList.size()>0){
+                grantedHolidayMapper.updateBatchSelective(expiryList);
+        }
+        if(carryOverExpiryList.size()>0){
+            grantedHolidayMapper.updateBatchSelective(carryOverExpiryList);
+        }
     }
+
+
+
+
+
 
 
     @Transactional

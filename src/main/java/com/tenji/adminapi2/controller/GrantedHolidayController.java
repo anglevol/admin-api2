@@ -25,7 +25,8 @@ public class GrantedHolidayController {
 
     }
 
-    @RequestMapping(value = "/add",method = RequestMethod.PUT)
+
+    @PostMapping("/add")
     public ApiResponse<Integer> addGrantedHoliday(@RequestBody GrantedHolidayForm grantedHolidayForm){
         int row = grantedHolidayService.add(grantedHolidayForm);
         return new ApiResponse<>(row);

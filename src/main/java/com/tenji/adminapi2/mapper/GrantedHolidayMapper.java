@@ -2,6 +2,7 @@ package com.tenji.adminapi2.mapper;
 
 import com.tenji.adminapi2.model.GrantedHoliday;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -24,4 +25,11 @@ public interface GrantedHolidayMapper {
     int reduceHoliday(long id, int days);
 
     int updateStatusById(long id, String statusCode);
+
+    List<GrantedHoliday> getActiveDataByEmployeeId(@Param("employeeId") Long employeeId);
+
+
+
+    int updateBatchSelective(List<GrantedHoliday> list);
+
 }
