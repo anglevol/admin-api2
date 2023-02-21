@@ -15,4 +15,6 @@ public interface EmployeeService {
 
     @Bean
     ApiResponse<String> addEmployee(EmployeeDto dto, HttpServletRequest request);
+
+    ApiResponse<Object> queryEmployee(HttpServletRequest request);
 }
