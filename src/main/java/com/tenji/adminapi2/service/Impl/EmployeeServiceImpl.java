@@ -4,6 +4,9 @@ import com.google.gson.Gson;
 import com.tenji.adminapi2.api.ApiResponse;
 import com.tenji.adminapi2.api.ApiResponseCode;
 import com.tenji.adminapi2.dto.EmployeeDto;
+import com.tenji.adminapi2.dto.UserInfo;
+import com.tenji.adminapi2.dto.UserInfoHolder;
+
 import com.tenji.adminapi2.mapper.EmployeeMapper;
 import com.tenji.adminapi2.model.Employee;
 import com.tenji.adminapi2.service.EmployeeService;
@@ -28,8 +31,9 @@ public class EmployeeServiceImpl implements EmployeeService {
     public ApiResponse<String> addEmployee(EmployeeDto dto, HttpServletRequest request) {
         ApiResponse<String> result = new ApiResponse<String>("success");
         logger.info("入力されたdto:" + gson.toJson(dto));
-        String operatorId = request.getParameter("operatorId");
-        if(!"1".equals(operatorId)) {
+        UserInfo userInfo= UserInfoHolder.get();
+       Long userId= userInfo.getUserId();
+        if(userId !=1) {
             return result.code(ApiResponseCode.status_401.getCode()).message(ApiResponseCode.status_401.getMessage());
         }
         Employee employee = employeeMapper.selectByUserId(dto.getUserId());
