@@ -4,6 +4,8 @@ import com.tenji.adminapi2.api.ApiResponse;
 import com.tenji.adminapi2.dto.GrantedHolidayForm;
 import com.tenji.adminapi2.dto.TakeHolidayForm;
 import com.tenji.adminapi2.model.GrantedHoliday;
+import com.tenji.adminapi2.model.GrantedHolidayLog;
+import com.tenji.adminapi2.service.GrantedHolidayLogService;
 import com.tenji.adminapi2.service.GrantedHolidayService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +20,9 @@ public class GrantedHolidayController {
 
     @Autowired
     GrantedHolidayService grantedHolidayService;
+
+    @Autowired
+    GrantedHolidayLogService grantedHolidayLogService;
 
     @RequestMapping(value = "/{id}",method = RequestMethod.GET)
     public ApiResponse<GrantedHoliday> getGrantedHoliday(@PathVariable long id){
@@ -56,12 +61,11 @@ public class GrantedHolidayController {
     @RequestMapping(value = "/logs/{employeeId}",method = RequestMethod.GET)
     public ApiResponse<Object> getHolidayLogByEmployeeId(@PathVariable long employeeId){
 
-        HashMap<String, Object> holidays = new HashMap<>();
-        List<GrantedHoliday> grantedHolidays = grantedHolidayService.getByEmployeeId(employeeId);
-
-        holidays.put("total", grantedHolidays.size());
-        holidays.put("list", grantedHolidays);
-        return new ApiResponse<>(holidays);
+        HashMap<String, Object> logs = new HashMap<>();
+        List<GrantedHolidayLog> holidayLogs = grantedHolidayLogService.getByEmployeeId(employeeId);
+        logs.put("total", holidayLogs.size());
+        logs.put("list", holidayLogs);
+        return new ApiResponse<>(logs);
 
     }
 }

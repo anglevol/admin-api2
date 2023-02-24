@@ -94,6 +94,6 @@
     select
     <include refid="Base_Column_List" />
     from granted_holiday_log
-    where id = #{employee_id,jdbcType=BIGINT}
+    where employee_id = #{employee_id,jdbcType=BIGINT}
   </select>
 </mapper>
