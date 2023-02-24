@@ -7,7 +7,6 @@ import java.util.Date;
 
 @Data
 public class GrantedHolidayVo {
-
     //ID
     private long id;
     //社員ID

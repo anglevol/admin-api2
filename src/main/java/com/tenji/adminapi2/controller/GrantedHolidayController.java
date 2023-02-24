@@ -2,12 +2,16 @@ package com.tenji.adminapi2.controller;
 
 import com.tenji.adminapi2.api.ApiResponse;
 import com.tenji.adminapi2.dto.GrantedHolidayForm;
-import com.tenji.adminapi2.dto.GrantedHolidayVo;
 import com.tenji.adminapi2.dto.TakeHolidayForm;
 import com.tenji.adminapi2.model.GrantedHoliday;
+import com.tenji.adminapi2.model.GrantedHolidayLog;
+import com.tenji.adminapi2.service.GrantedHolidayLogService;
 import com.tenji.adminapi2.service.GrantedHolidayService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.List;
 
 @RestController
 @RequestMapping("/granted")
@@ -17,6 +21,9 @@ public class GrantedHolidayController {
     @Autowired
     GrantedHolidayService grantedHolidayService;
 
+    @Autowired
+    GrantedHolidayLogService grantedHolidayLogService;
+
     @RequestMapping(value = "/{id}",method = RequestMethod.GET)
     public ApiResponse<GrantedHoliday> getGrantedHoliday(@PathVariable long id){
 
@@ -25,6 +32,16 @@ public class GrantedHolidayController {
 
     }
 
+    @RequestMapping(value = "/list/{employeeId}",method = RequestMethod.GET)
+    public ApiResponse<Object> getHolidayList(@PathVariable long employeeId){
+
+        HashMap<String, Object> holidays = new HashMap<>();
+        List<GrantedHoliday> grantedHolidays = grantedHolidayService.getByEmployeeId(employeeId);
+        holidays.put("total", grantedHolidays.size());
+        holidays.put("list", grantedHolidays);
+        return new ApiResponse<>(holidays);
+
+    }
 
     @PostMapping("/add")
     public ApiResponse<Integer> addGrantedHoliday(@RequestBody GrantedHolidayForm grantedHolidayForm){
@@ -38,6 +55,17 @@ public class GrantedHolidayController {
 
         int updateRow = grantedHolidayService.takeHoliday(takeHolidayForm.getId(),takeHolidayForm.getHoliday());
         return new ApiResponse<>(updateRow);
+
+    }
+
+    @RequestMapping(value = "/logs/{employeeId}",method = RequestMethod.GET)
+    public ApiResponse<Object> getHolidayLogByEmployeeId(@PathVariable long employeeId){
+
+        HashMap<String, Object> logs = new HashMap<>();
+        List<GrantedHolidayLog> holidayLogs = grantedHolidayLogService.getByEmployeeId(employeeId);
+        logs.put("total", holidayLogs.size());
+        logs.put("list", holidayLogs);
+        return new ApiResponse<>(logs);
 
     }
 }

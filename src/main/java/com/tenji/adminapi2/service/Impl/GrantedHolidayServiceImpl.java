@@ -169,18 +169,13 @@ public class GrantedHolidayServiceImpl implements GrantedHolidayService {
     }
 
 
-
-
-
-
-
     @Transactional
     @Override
     public int takeHoliday(long id, int days) {
 
         GrantedHoliday grantedHoliday = grantedHolidayMapper.selectByPrimaryKey(id);
-        if(grantedHoliday.getUnusedDays() < days){
-            throw new ApiException(ApiResponseCode.status_102,"申請した有給休暇日数は未消化日数より多い!!!");
+        if(grantedHoliday.getRemainingDays() < days){
+            throw new BizException("申請日数は残日数より多い!!!");
         }
 
         try {
@@ -188,23 +183,31 @@ public class GrantedHolidayServiceImpl implements GrantedHolidayService {
 
             if(reduceCount == 1){
                 grantedHoliday = grantedHolidayMapper.selectByPrimaryKey(id);
-                if(grantedHoliday.getRemainingDays() < 0){//
-                    throw new ApiException(ApiResponseCode.status_103);
-                } else if (grantedHoliday.getRemainingDays() == 0) {
-                    //TODO [状態/status]カプセル化
-                    int updateCount = grantedHolidayMapper.updateStatusById(id, "GHST05");//状態コード：消化済
 
-                    if (updateCount == 1) {
-                        return 1;
-                    } else {//状態更新件数は1ではない場合、エラーになります
-                        throw new ApiException(ApiResponseCode.status_103, "状態更新件数は1ではない!!!");
+                if (grantedHoliday.getRemainingDays() == 0) {
+                    int updateCount = grantedHolidayMapper.updateStatusById(id, MasterClassCode.GHST05.getCode());//状態コード：消化済
+                    if (updateCount != 1) {//状態更新件数は1ではない場合、エラーになります
+                        throw new BizException("状態更新件数は異常です!!!");
                     }
-                } else {
-                    return 1;
                 }
+
+                GrantedHolidayLog log = new GrantedHolidayLog();
+                log.setEmployeeId(grantedHoliday.getEmployeeId());
+                log.setStatusCode(MasterClassCode.HOLIDAYLOGTYPE2.getCode());
+                log.setDays(days);
+                log.setCreateTime(new Date());
+                int insertCount = grantedHolidayLogMapper.insertSelective(log);
+
+                if(insertCount != 1){
+                    throw new BizException("付与履歴テーブルの更新は失敗しました!!!");
+                }
+
             } else {//消化日数更新件数は1ではないの場合、エラーになります
-                throw new ApiException(ApiResponseCode.status_103,"消化日数更新件数は1ではない!!!");
+                throw new BizException("未消化、消化、残日数更新件数は異常です!!!");
             }
+
+            return 1;
+
         } catch (Exception e) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             throw new ApiException(ApiResponseCode.status_103,e.getMessage());

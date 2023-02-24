@@ -12,7 +12,7 @@
     id, employee_id, status_code, days, create_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from granted_holiday_log
     where id = #{id,jdbcType=INTEGER}
@@ -22,9 +22,9 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.tenji.adminapi2.model.GrantedHolidayLog">
-    insert into granted_holiday_log (id, employee_id, status_code, 
+    insert into granted_holiday_log (id, employee_id, status_code,
       days, create_time)
-    values (#{id,jdbcType=INTEGER}, #{employeeId,jdbcType=INTEGER}, #{statusCode,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=INTEGER}, #{employeeId,jdbcType=INTEGER}, #{statusCode,jdbcType=VARCHAR},
       #{days,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.tenji.adminapi2.model.GrantedHolidayLog">
@@ -90,4 +90,10 @@
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <select id="selectByEmployeeId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from granted_holiday_log
+    where employee_id = #{employee_id,jdbcType=BIGINT}
+  </select>
 </mapper>

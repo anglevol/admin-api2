@@ -22,9 +22,9 @@ public interface GrantedHolidayMapper {
 
     List<GrantedHoliday> selectByEmployeeId(long employeeId);
 
-    int reduceHoliday(long id, int days);
+    int reduceHoliday(@Param("id") long id, @Param("days") int days);
 
-    int updateStatusById(long id, String statusCode);
+    int updateStatusById(@Param("id") long id, @Param("statusCode") String statusCode);
 
     List<GrantedHoliday> getActiveDataByEmployeeId(@Param("employeeId") Long employeeId);
 
