@@ -179,8 +179,12 @@
     from employee
     where employee_id = #{employeeid,jdbcType=VARCHAR}
   </select>
-  <select id="selectAll" resultMap="BaseResultMap">
+  <select id="selectAll" parameterType="java.lang.String" resultMap="BaseResultMap">
     select b.* from (select row_number() over (partition by name order by createdate desc) as 'rowid',
     a.* from employee a) b where b.rowid=1
+    <if test="searchWord != null">
+      and (b.employee_id like concat('%',#{searchWord,jdbcType=VARCHAR},'%') or
+      b.name like concat('%',#{searchWord,jdbcType=VARCHAR},'%'))
+    </if>
   </select>
 </mapper>

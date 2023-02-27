@@ -12,7 +12,10 @@ mybatis:
     map-underscore-to-camel-case: true
     default-statement-timeout: 15
 
-
+pagehelper:
+  supportMethodsArguments: true
+  reasonable: true
+  pageSizeZero: true
 
 spring:
   datasource:
