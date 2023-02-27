@@ -1,7 +1,6 @@
 package com.tenji.adminapi2.mapper;
 
-import com.tenji.adminapi2.entity.GrantedHoliday;
-import com.tenji.adminapi2.model.GrantedHolidayModel;
+import com.tenji.adminapi2.model.GrantedHoliday;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -9,19 +8,32 @@ import java.util.List;
 
 @Mapper
 public interface GrantedHolidayMapper {
+    int deleteByPrimaryKey(int id);
 
-    List<GrantedHolidayModel> getByEmployeeId(@Param("employeeId") String employeeId);
+    int insert(GrantedHoliday record);
 
-    List<GrantedHolidayModel> getByStatusCode(@Param("statusCode") String statusCode);
+    int insertSelective(GrantedHoliday record);
 
-    GrantedHolidayModel getById(@Param("id") long id);
+    GrantedHoliday selectByPrimaryKey(long id);
 
-    GrantedHoliday getEntityById(@Param("id") long id);
+    int updateByPrimaryKeySelective(GrantedHoliday record);
 
-    int insert(GrantedHoliday grantedHoliday);
+    int updateByPrimaryKey(GrantedHoliday record);
 
-    int updateStatus(@Param("id") long id, @Param("statusCode") String statusCode);
+    List<GrantedHoliday> selectByEmployeeId(long employeeId);
 
-    int reduceHoliday(@Param("id") long id, @Param("holiday")int holiday);
+    int reduceHoliday(@Param("id") long id, @Param("days") int days);
+
+    int updateStatusById(@Param("id") long id, @Param("statusCode") String statusCode);
+
+    List<GrantedHoliday> getActiveDataByEmployeeId(@Param("employeeId") Long employeeId);
+
+
+
+    int updateBatchSelective(List<GrantedHoliday> list);
+
+
+    Integer countActiveDays(@Param("employeeId") Long employeeId);
+
 
 }

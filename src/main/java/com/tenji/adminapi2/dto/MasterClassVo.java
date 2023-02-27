@@ -1,11 +1,9 @@
-package com.tenji.adminapi2.entity;
+package com.tenji.adminapi2.dto;
 
 import lombok.Data;
 
 @Data
-public class MasterClass {
-    //ID
-    private long id;
+public class MasterClassVo {
     //種類
     private String type;
     //種類和名

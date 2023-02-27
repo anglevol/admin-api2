@@ -21,6 +21,5 @@ spring:
     username: root
     password: tjjhhs@Ab23
 
-
 tenji:
   pwdEncryption: _tenji

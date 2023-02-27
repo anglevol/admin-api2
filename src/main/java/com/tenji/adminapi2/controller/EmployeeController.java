@@ -1,12 +1,23 @@
 package com.tenji.adminapi2.controller;
 
 import com.tenji.adminapi2.api.ApiResponse;
+
+
 import com.tenji.adminapi2.dto.EmployeeDto;
 import com.tenji.adminapi2.service.EmployeeService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+
+import com.tenji.adminapi2.dto.EmployeeDto;
+import com.tenji.adminapi2.service.EmployeeService;
+import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
 
 @RestController
 @RequestMapping("/employee")
@@ -32,3 +43,4 @@ public class EmployeeController {
         return employeeService.queryEmployee(request);
     }
 }
+

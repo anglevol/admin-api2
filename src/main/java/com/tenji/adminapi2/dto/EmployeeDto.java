@@ -21,4 +21,6 @@ public class EmployeeDto {
     private Integer remainingDays;
 
     private String comment;
+
 }
+

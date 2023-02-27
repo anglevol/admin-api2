@@ -9,17 +9,17 @@ public class GrantedHolidayForm {
     //ID
     private long id;
     //管理者ID
-    private long userId;
+  //  private long userId;
     //社員ID
-    private String employeeId;
+    private long employeeId;
     //付与時社歴
-    private float grantedServiceYears;
+ //   private float grantedServiceYears;
     //付与年
     private Date grantedDate;
     //基本失効日
-    private Date expiryDate;
+   // private Date expiryDate;
     //繰越失効日
-    private Date carryoverExpiryDate;
+   // private Date carryoverExpiryDate;
     //状態
     private String statusCode;
     //付与日数
