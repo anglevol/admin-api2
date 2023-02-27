@@ -1,8 +1,7 @@
 package com.tenji.adminapi2.controller;
 
 import com.tenji.adminapi2.api.ApiResponse;
-import com.tenji.adminapi2.dto.GrantedHolidayForm;
-import com.tenji.adminapi2.dto.TakeHolidayForm;
+import com.tenji.adminapi2.dto.*;
 import com.tenji.adminapi2.model.GrantedHoliday;
 import com.tenji.adminapi2.model.GrantedHolidayLog;
 import com.tenji.adminapi2.service.GrantedHolidayLogService;
@@ -25,22 +24,17 @@ public class GrantedHolidayController {
     GrantedHolidayLogService grantedHolidayLogService;
 
     @RequestMapping(value = "/{id}",method = RequestMethod.GET)
-    public ApiResponse<GrantedHoliday> getGrantedHoliday(@PathVariable long id){
+    public ApiResponse<GrantedHoliday> getGrantedHolidayById(@PathVariable long id){
 
         GrantedHoliday grantedHoliday = grantedHolidayService.getById(id);
         return new ApiResponse<>(grantedHoliday);
 
     }
 
-    @RequestMapping(value = "/list/{employeeId}",method = RequestMethod.GET)
-    public ApiResponse<Object> getHolidayList(@PathVariable long employeeId){
-
-        HashMap<String, Object> holidays = new HashMap<>();
-        List<GrantedHoliday> grantedHolidays = grantedHolidayService.getByEmployeeId(employeeId);
-        holidays.put("total", grantedHolidays.size());
-        holidays.put("list", grantedHolidays);
-        return new ApiResponse<>(holidays);
-
+    @RequestMapping(value = "/list",method = RequestMethod.GET)
+    public ApiResponse<BasicQueryResult> getHolidayListByEmployeeId(GrantedHolidayQueryForm queryForm){
+        BasicQueryResult queryResult = grantedHolidayService.getGrantedHolidayVoListByEmployeeId(queryForm);
+        return new ApiResponse<>(queryResult);
     }
 
     @PostMapping("/add")

@@ -1,9 +1,7 @@
 package com.tenji.adminapi2.service.Impl;
 
 import com.tenji.adminapi2.api.ApiResponseCode;
-import com.tenji.adminapi2.dto.GrantedHolidayForm;
-import com.tenji.adminapi2.dto.UserInfo;
-import com.tenji.adminapi2.dto.UserInfoHolder;
+import com.tenji.adminapi2.dto.*;
 import com.tenji.adminapi2.dto.config.MasterClassCode;
 import com.tenji.adminapi2.exception.ApiException;
 import com.tenji.adminapi2.exception.BizException;
@@ -39,9 +37,28 @@ public class GrantedHolidayServiceImpl implements GrantedHolidayService {
     @Autowired
     private GrantedHolidayLogMapper grantedHolidayLogMapper;
 
+    /**
+     * フォームから社員ID、ページ、表示件数を取得して、相応ページの付与一覧データを画面に渡します
+     * @param queryForm
+     * @return
+     */
     @Override
-    public List<GrantedHoliday> getByEmployeeId(long employeeId) {
-        return grantedHolidayMapper.selectByEmployeeId(employeeId);
+    public BasicQueryResult getGrantedHolidayVoListByEmployeeId(GrantedHolidayQueryForm queryForm) {
+
+        int currentPage = queryForm.getPageNum();
+        int pageSize = queryForm.getPageSize();
+        long employeeId = queryForm.getEmployeeId();
+
+        List <GrantedHolidayVo> holidayVoList = grantedHolidayMapper.selectByEmployeeId(employeeId, (currentPage-1)*pageSize, pageSize);
+        long totals = grantedHolidayMapper.selectTotolsByEmployeeId(queryForm.getEmployeeId());
+
+        BasicQueryResult queryResult = new BasicQueryResult();
+        queryResult.setPageNum(queryForm.getPageNum());
+        queryResult.setPageSize(queryForm.getPageSize());
+        queryResult.setTotalSize(totals);
+        queryResult.setResult(holidayVoList);
+
+        return queryResult;
     }
 
     @Override
