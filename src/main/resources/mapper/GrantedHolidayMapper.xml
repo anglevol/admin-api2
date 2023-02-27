@@ -17,6 +17,23 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
+  <resultMap id="VoResultMap" type="com.tenji.adminapi2.dto.GrantedHolidayVo">
+      <id column="id" jdbcType="BIGINT" property="id" />
+      <result column="employee_code" jdbcType="VARCHAR" property="employeeCode" />
+      <result column="employee_name" jdbcType="VARCHAR" property="employeeName" />
+      <result column="department_name" jdbcType="VARCHAR" property="departmentName" />
+      <result column="granted_service_years" jdbcType="FLOAT" property="grantedServiceYears" />
+      <result column="granted_date" jdbcType="DATE" property="grantedDate" />
+      <result column="expiry_date" jdbcType="DATE" property="expiryDate" />
+      <result column="carryover_expiry_date" jdbcType="DATE" property="carryoverExpiryDate" />
+      <result column="status" jdbcType="VARCHAR" property="status" />
+      <result column="granted_days" jdbcType="INTEGER" property="grantedDays" />
+      <result column="used_days" jdbcType="INTEGER" property="usedDays" />
+      <result column="unused_days" jdbcType="INTEGER" property="unusedDays" />
+      <result column="remaining_days" jdbcType="INTEGER" property="remainingDays" />
+      <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+      <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
   <sql id="Base_Column_List">
     id, user_id, employee_id, granted_service_years, granted_date, expiry_date, carryover_expiry_date,
     status_code, granted_days, used_days, unused_days, remaining_days, create_time, update_time
@@ -196,11 +213,33 @@
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <select id="selectByEmployeeId" parameterType="java.lang.Long" resultMap="BaseResultMap">
-      select
-      <include refid="Base_Column_List" />
-      from granted_holiday
-      where employee_id = #{employeeId,jdbcType=BIGINT}
+  <select id="selectByEmployeeId" resultMap="VoResultMap">
+    select gh.*,
+           e.employee_id as employee_code,
+           e.name as employee_name,
+           dpt.value as department_name,
+           st.value as status
+    from granted_holiday gh
+
+    inner join employee e
+    on e.id = gh.employee_id
+
+    inner join master_class dpt
+    on dpt.code = e.department_code
+    and dpt.type = 'DPT'
+
+    inner join master_class st
+    on st.code = gh.status_code
+    and st.type = 'GHST'
+
+    where gh.employee_id = #{employeeId,jdbcType=BIGINT}
+
+    order by create_time asc
+    limit #{page},#{size}
+  </select>
+  <select id="selectTotolsByEmployeeId" parameterType="java.lang.Long" resultType="Long">
+    select count(1) from granted_holiday
+    where employee_id = #{employeeId,jdbcType=BIGINT}
   </select>
   <update id="updateStatus">
       update
