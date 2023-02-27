@@ -64,7 +64,11 @@ public class GrantedHolidayServiceImpl implements GrantedHolidayService {
             grantedHoliday.setUserId(userInfo.getUserId());
 
             grantedHoliday.setEmployeeId(grantedHolidayForm.getEmployeeId());
+
             Date grantedDate=grantedHolidayForm.getGrantedDate();
+            if(Objects.isNull(grantedDate)){
+                throw new BizException("付与日データはありません。");
+            }
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
             Calendar    calendar =Calendar.getInstance();
             calendar.setTime(grantedDate);
@@ -94,7 +98,9 @@ public class GrantedHolidayServiceImpl implements GrantedHolidayService {
                 throw new BizException("master code データはありません。");
             }
             grantedHoliday.setStatusCode(masterClass.getCode());
-
+            if(Objects.isNull(grantedHolidayForm.getGrantedDays()) || grantedHolidayForm.getGrantedDays()==0){
+                throw new BizException("日数 データはありません。");
+            }
             grantedHoliday.setGrantedDays(grantedHolidayForm.getGrantedDays());
 
             grantedHoliday.setUsedDays(0);
