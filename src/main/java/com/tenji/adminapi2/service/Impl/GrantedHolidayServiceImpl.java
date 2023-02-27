@@ -190,40 +190,64 @@ public class GrantedHolidayServiceImpl implements GrantedHolidayService {
     @Override
     public int takeHoliday(long id, int days) {
 
-        GrantedHoliday grantedHoliday = grantedHolidayMapper.selectByPrimaryKey(id);
-        if(grantedHoliday.getRemainingDays() < days){
+        Employee employee = employeeMapper.selectByPrimaryKey(id);
+        if(employee.getRemainingDays() < days){
             throw new BizException("申請日数は残日数より多い!!!");
         }
 
         try {
-            int reduceCount = grantedHolidayMapper.reduceHoliday(id,days);
+            int tDays = days;
+            Date now = new Date();
 
-            if(reduceCount == 1){
-                grantedHoliday = grantedHolidayMapper.selectByPrimaryKey(id);
-
-                if (grantedHoliday.getRemainingDays() == 0) {
-                    int updateCount = grantedHolidayMapper.updateStatusById(id, MasterClassCode.GHST05.getCode());//状態コード：消化済
-                    if (updateCount != 1) {//状態更新件数は1ではない場合、エラーになります
-                        throw new BizException("状態更新件数は異常です!!!");
-                    }
+            List<GrantedHoliday> holidays = grantedHolidayMapper.getActiveDataByEmployeeId(id);
+            for (GrantedHoliday holiday: holidays) {
+                if(tDays == 0){
+                    break;
                 }
 
-                GrantedHolidayLog log = new GrantedHolidayLog();
-                log.setEmployeeId(grantedHoliday.getEmployeeId());
-                log.setStatusCode(MasterClassCode.HOLIDAYLOGTYPE2.getCode());
-                log.setDays(days);
-                log.setCreateTime(new Date());
-                int insertCount = grantedHolidayLogMapper.insertSelective(log);
-
-                if(insertCount != 1){
-                    throw new BizException("付与履歴テーブルの更新は失敗しました!!!");
+                if(holiday.getRemainingDays() > tDays){
+                    holiday.setRemainingDays(holiday.getRemainingDays() - tDays);
+                    holiday.setUnusedDays(holiday.getUnusedDays() - tDays);
+                    holiday.setUsedDays(holiday.getUsedDays() + tDays);
+                    holiday.setUpdateTime(now);
+                    tDays = 0;
+                } else {
+                    tDays = tDays - holiday.getRemainingDays();
+                    holiday.setRemainingDays(0);
+                    holiday.setUnusedDays(0);
+                    holiday.setUsedDays(holiday.getGrantedDays());
+                    holiday.setStatusCode(MasterClassCode.GHST05.getCode());
+                    holiday.setUpdateTime(now);
                 }
 
-            } else {//消化日数更新件数は1ではないの場合、エラーになります
-                throw new BizException("未消化、消化、残日数更新件数は異常です!!!");
+                int updateCount = grantedHolidayMapper.updateByPrimaryKey(holiday);
+                if(updateCount != 1){
+                    throw new BizException("付与一覧テーブルの更新は失敗しました!!!");
+                }
             }
 
-            return 1;
+            //総残日数を取得
+            int totalRemainingDays = holidays.stream().mapToInt(GrantedHoliday::getRemainingDays).sum();
+            employee.setRemainingDays(totalRemainingDays);
+            employee.setUpdatedate(now);
+
+            int updateCount = employeeMapper.updateByPrimaryKey(employee);
+            if(updateCount != 1){
+                throw new BizException("社員テーブルの更新は失敗しました!!!");
+            }
+
+            GrantedHolidayLog log = new GrantedHolidayLog();
+            log.setEmployeeId(id);
+            log.setStatusCode(MasterClassCode.HOLIDAYLOGTYPE2.getCode());
+            log.setDays(days);
+            log.setCreateTime(now);
+            int insertCount = grantedHolidayLogMapper.insert(log);
+
+            if(insertCount != 1){
+                throw new BizException("付与履歴テーブルの更新は失敗しました!!!");
+            }
+
+            return insertCount;
 
         } catch (Exception e) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
