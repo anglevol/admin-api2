@@ -1,5 +1,7 @@
 package com.tenji.adminapi2.service.Impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.google.gson.Gson;
 import com.tenji.adminapi2.api.ApiResponse;
 import com.tenji.adminapi2.api.ApiResponseCode;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -60,7 +63,15 @@ public class EmployeeServiceImpl implements EmployeeService {
         String employeeId = request.getParameter("employeeId");
         ApiResponse<Object> result = new ApiResponse<Object>("success");
         if(StringUtils.isEmpty(employeeId)) {
-            return result.data(employeeMapper.selectAll());
+            String num = request.getParameter("pageNum");
+            String size = request.getParameter("pageSize");
+            String searchWord = request.getParameter("searchWord");
+            int pageNum = StringUtils.isEmpty(num) ? 1 : Integer.valueOf(num);
+            int pageSize = StringUtils.isEmpty(size) ? 10 : Integer.valueOf(size);
+            PageHelper.startPage(pageNum, pageSize);
+            List<Employee> employeeList = employeeMapper.selectAll(searchWord);
+            PageInfo pageInfo = new PageInfo(employeeList);
+            return result.data(pageInfo);
         }
         Employee employee = employeeMapper.selectByEmployeeId(employeeId);
         return result.data(employee);

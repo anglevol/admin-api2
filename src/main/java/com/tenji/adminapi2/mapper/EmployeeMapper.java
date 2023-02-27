@@ -25,5 +25,5 @@ public interface EmployeeMapper {
 
     Employee selectByEmployeeId(String employeeId);
 
-    List<Employee> selectAll();
+    List<Employee> selectAll(String searchWord);
 }
