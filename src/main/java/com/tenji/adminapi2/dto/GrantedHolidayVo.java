@@ -9,15 +9,12 @@ import java.util.Date;
 public class GrantedHolidayVo {
     //ID
     private long id;
-    //社員ID
-    private Integer employeeId;
+    //社員コード
+    private String employeeCode;
     //社員氏名
     private String employeeName;
     //部署
     private String departmentName;
-    //入社日
-    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+9")
-    private Date employDate;
     //付与時社歴
     private float grantedServiceYears;
     //付与年
