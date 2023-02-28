@@ -221,14 +221,14 @@
            st.value as status
     from granted_holiday gh
 
-    inner join employee e
+    left join employee e
     on e.id = gh.employee_id
 
-    inner join master_class dpt
+    left join master_class dpt
     on dpt.code = e.department_code
     and dpt.type = 'DPT'
 
-    inner join master_class st
+    left join master_class st
     on st.code = gh.status_code
     and st.type = 'GHST'
 
