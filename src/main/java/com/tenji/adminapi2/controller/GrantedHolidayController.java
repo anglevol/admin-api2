@@ -46,20 +46,13 @@ public class GrantedHolidayController {
 
     @RequestMapping(value = "/takeHoliday",method = RequestMethod.POST)
     public ApiResponse<Integer> takeHoliday(@RequestBody TakeHolidayForm takeHolidayForm){
-
         int updateRow = grantedHolidayService.takeHoliday(takeHolidayForm.getId(),takeHolidayForm.getHoliday());
         return new ApiResponse<>(updateRow);
-
     }
 
-    @RequestMapping(value = "/logs/{employeeId}",method = RequestMethod.GET)
-    public ApiResponse<Object> getHolidayLogByEmployeeId(@PathVariable long employeeId){
-
-        HashMap<String, Object> logs = new HashMap<>();
-        List<GrantedHolidayLog> holidayLogs = grantedHolidayLogService.getByEmployeeId(employeeId);
-        logs.put("total", holidayLogs.size());
-        logs.put("list", holidayLogs);
-        return new ApiResponse<>(logs);
-
+    @RequestMapping(value = "/logs",method = RequestMethod.GET)
+    public ApiResponse<BasicQueryResult> getHolidayLogByEmployeeId(GrantedHolidayLogQueryForm queryForm){
+        BasicQueryResult queryResult = grantedHolidayLogService.getByEmployeeId(queryForm);
+        return new ApiResponse<>(queryResult);
     }
 }

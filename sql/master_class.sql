@@ -28,3 +28,5 @@ INSERT INTO `master_class`(`type`,`type_name`,`code`,`value`) VALUES ('DPT','部
 INSERT INTO `master_class`(`type`,`type_name`,`code`,`value`) VALUES ('DPT','部署','DPT011','管理本部・総務財務');
 INSERT INTO `master_class`(`type`,`type_name`,`code`,`value`) VALUES ('DPT','部署','DPT012','管理本部・人事採用');
 INSERT INTO `master_class`(`type`,`type_name`,`code`,`value`) VALUES ('DPT','部署','DPT013','管理本部・法務広報セキュリティー');
+INSERT INTO `master_class`(`type`,`type_name`,`code`,`value`) VALUES ('PROC','休暇処理','PROC01','付与');
+INSERT INTO `master_class`(`type`,`type_name`,`code`,`value`) VALUES ('PROC','休暇処理','PROC02','消化');

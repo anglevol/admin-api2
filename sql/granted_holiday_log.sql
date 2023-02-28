@@ -24,7 +24,7 @@ DROP TABLE IF EXISTS `granted_holiday_log`;
 CREATE TABLE `granted_holiday_log`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `employee_id` int(11) NOT NULL,
-  `status_code` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '1 付与 2消化',
+  `status_code` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'PROC01 付与 PROC02 消化',
   `days` int(11) NOT NULL,
   `create_time` datetime(0) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
@@ -33,6 +33,6 @@ CREATE TABLE `granted_holiday_log`  (
 -- ----------------------------
 -- Records of granted_holiday_log
 -- ----------------------------
-INSERT INTO `granted_holiday_log` VALUES (1, 1, '1', 10, '2023-02-21 15:28:59');
+INSERT INTO `granted_holiday_log` VALUES (1, 1, 'PROC01', 10, '2023-02-21 15:28:59');
 
 SET FOREIGN_KEY_CHECKS = 1;

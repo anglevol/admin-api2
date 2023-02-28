@@ -1,5 +1,6 @@
 package com.tenji.adminapi2.mapper;
 
+import com.tenji.adminapi2.dto.GrantedHolidayLogVo;
 import com.tenji.adminapi2.model.GrantedHolidayLog;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -19,5 +20,7 @@ public interface GrantedHolidayLogMapper {
 
     int updateByPrimaryKey(GrantedHolidayLog record);
 
-    List<GrantedHolidayLog> selectByEmployeeId(long employeeId);
+    List<GrantedHolidayLogVo> selectByEmployeeId(long employeeId, int page, int size);
+
+    int selectTotolsByEmployeeId(long employeeId);
 }

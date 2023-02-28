@@ -2,9 +2,16 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.tenji.adminapi2.mapper.GrantedHolidayLogMapper">
   <resultMap id="BaseResultMap" type="com.tenji.adminapi2.model.GrantedHolidayLog">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="employee_id" jdbcType="INTEGER" property="employeeId" />
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="employee_id" jdbcType="BIGINT" property="employeeId" />
     <result column="status_code" jdbcType="VARCHAR" property="statusCode" />
+    <result column="days" jdbcType="INTEGER" property="days" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <resultMap id="VoResultMap" type="com.tenji.adminapi2.dto.GrantedHolidayLogVo">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="employee_code" jdbcType="BIGINT" property="employeeCode" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
     <result column="days" jdbcType="INTEGER" property="days" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
@@ -90,10 +97,29 @@
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <select id="selectByEmployeeId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+  <select id="selectByEmployeeId" resultMap="VoResultMap">
     select
-    <include refid="Base_Column_List" />
-    from granted_holiday_log
-    where employee_id = #{employee_id,jdbcType=BIGINT}
+        ghl.id,
+        e.employee_id as employee_code,
+        st.value as status,
+        ghl.days,
+        ghl.create_time
+    from granted_holiday_log ghl
+
+    left join employee e
+    on e.id = ghl.employee_id
+
+    left join master_class st
+    on st.code = ghl.status_code
+    and st.type = 'PROC'
+
+    where ghl.employee_id = #{employeeId,jdbcType=BIGINT}
+
+    order by create_time asc
+    limit #{page},#{size}
+  </select>
+  <select id="selectTotolsByEmployeeId" parameterType="java.lang.Long" resultType="java.lang.Integer">
+    select count(1) from granted_holiday_log
+    where employee_id = #{employeeId,jdbcType=BIGINT}
   </select>
 </mapper>
