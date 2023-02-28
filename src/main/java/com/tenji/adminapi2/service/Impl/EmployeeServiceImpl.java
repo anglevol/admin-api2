@@ -60,9 +60,9 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     public ApiResponse<Object> queryEmployee(HttpServletRequest request) {
-        String employeeId = request.getParameter("employeeId");
+        String id = request.getParameter("id");
         ApiResponse<Object> result = new ApiResponse<Object>("success");
-        if(StringUtils.isEmpty(employeeId)) {
+        if(StringUtils.isEmpty(id)) {
             String num = request.getParameter("pageNum");
             String size = request.getParameter("pageSize");
             String searchWord = request.getParameter("searchWord");
@@ -73,7 +73,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             PageInfo pageInfo = new PageInfo(employeeList);
             return result.data(pageInfo);
         }
-        Employee employee = employeeMapper.selectByEmployeeId(employeeId);
+        Employee employee = employeeMapper.selectByPrimaryKey(Long.parseLong(id));
         return result.data(employee);
     }
 }
