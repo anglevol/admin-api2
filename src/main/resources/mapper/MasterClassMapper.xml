@@ -98,6 +98,11 @@ where type =#{type,jdbcType=VARCHAR} and code=#{code,jdbcType=VARCHAR}
 
 </select>
 
+  <select id="getByType" resultType="com.tenji.adminapi2.model.MasterClass">
+    select * from   master_class
+    where type =#{type,jdbcType=VARCHAR}
+
+  </select>
 
 
 
