@@ -38,7 +38,7 @@
       #{employdate,jdbcType=DATE}, #{remainingDays,jdbcType=INTEGER}, #{comment,jdbcType=VARCHAR},
       #{createdate,jdbcType=DATE}, #{updatedate,jdbcType=DATE})
   </insert>
-  <insert id="insertSelective" parameterType="com.tenji.adminapi2.model.Employee">
+  <insert id="insertSelective" parameterType="com.tenji.adminapi2.model.Employee" keyColumn="id" keyProperty="id"  useGeneratedKeys="true">
     insert into employee
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">

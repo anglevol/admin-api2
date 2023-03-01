@@ -53,10 +53,13 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
         Employee newEmployee = new Employee();
         BeanUtils.copyProperties(dto, newEmployee);
+        newEmployee.setUserId(userId.intValue());
         newEmployee.setCreatedate(new Date());
         newEmployee.setUpdatedate(new Date());
-        int i = employeeMapper.insert(newEmployee);
-        return i == 1 ? result : result.code(ApiResponseCode.status_103.getCode()).message(ApiResponseCode.status_103.getMessage());
+        int i = employeeMapper.insertSelective(newEmployee);
+        newEmployee.setEmployeeid("TJE_"+i);
+        int j=  employeeMapper.updateByPrimaryKey(newEmployee);
+        return j == 1 ? result : result.code(ApiResponseCode.status_103.getCode()).message(ApiResponseCode.status_103.getMessage());
     }
 
     public ApiResponse<Object> queryEmployee(HttpServletRequest request) {
