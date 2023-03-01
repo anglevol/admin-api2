@@ -10,7 +10,7 @@ import java.util.List;
 @Mapper
 public interface MasterClassMapper {
 
-    List<MasterClassVo> getByType(@Param("type") String type);
+    List<MasterClass> getByType(@Param("type") String type);
 
     int insert(MasterClass masterClass);
 

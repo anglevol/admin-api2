@@ -17,4 +17,7 @@ public interface EmployeeService {
     ApiResponse<String> addEmployee(EmployeeDto dto, HttpServletRequest request);
 
     ApiResponse<Object> queryEmployee(HttpServletRequest request);
+
+    void deleteEmployee(Long id);
+
 }
