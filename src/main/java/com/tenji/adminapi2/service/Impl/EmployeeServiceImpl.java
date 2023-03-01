@@ -94,6 +94,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             throw new BizException("エーラーです、選択したemployeeデータはありません。");
         }
         EmployeeVo vo = new EmployeeVo();
+        vo.setId(employee.getId());
         vo.setEmployeeId(employee.getEmployeeid());
         vo.setDepartmentCode(employee.getDepartmentCode());
         if(MasterClassCode.GENDERMAN.getCode().equals(employee.getGender().toString())){
