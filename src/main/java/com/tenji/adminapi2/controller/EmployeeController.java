@@ -42,5 +42,12 @@ public class EmployeeController {
     public ApiResponse<Object> queryEmployee(HttpServletRequest request) {
         return employeeService.queryEmployee(request);
     }
+
+    @GetMapping(value="/delete")
+    public ApiResponse<Void> deleteEmployee(@RequestParam("id") Long id){
+        employeeService.deleteEmployee(id);
+        return new ApiResponse<>();
+    }
+
 }
 
