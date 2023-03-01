@@ -11,6 +11,7 @@ mybatis:
   configuration:
     map-underscore-to-camel-case: true
     default-statement-timeout: 15
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 pagehelper:
   supportMethodsArguments: true

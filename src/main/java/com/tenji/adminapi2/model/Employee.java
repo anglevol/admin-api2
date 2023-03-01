@@ -27,4 +27,5 @@ public class Employee {
 
     private Date updatedate;
 
+    private Integer deleted;
 }

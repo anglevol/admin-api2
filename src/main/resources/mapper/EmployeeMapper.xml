@@ -13,10 +13,11 @@
     <result column="comment" jdbcType="VARCHAR" property="comment" />
     <result column="createdate" jdbcType="DATE" property="createdate" />
     <result column="updatedate" jdbcType="DATE" property="updatedate" />
+    <result column="deleted" jdbcType="INTEGER" property="deleted" />
   </resultMap>
   <sql id="Base_Column_List">
     id, employee_id, user_id, name, department_code, gender, employdate, remaining_days,
-    comment, createdate, updatedate
+    comment, createdate, updatedate,deleted
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select
@@ -144,6 +145,9 @@
       <if test="updatedate != null">
         updatedate = #{updatedate,jdbcType=DATE},
       </if>
+      <if test="deleted != null">
+        deleted = #{deleted,jdbcType=INTEGER},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -159,6 +163,7 @@
       comment = #{comment,jdbcType=VARCHAR},
       createdate = #{createdate,jdbcType=DATE},
       updatedate = #{updatedate,jdbcType=DATE}
+
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="selectByUserId" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -181,10 +186,11 @@
   </select>
   <select id="selectAll" parameterType="java.lang.String" resultMap="BaseResultMap">
     select b.* from (select row_number() over (partition by name order by createdate desc) as 'rowid',
-    a.* from employee a) b where b.rowid=1
+    a.* from employee a) b where b.rowid=1 and b.deleted=0
     <if test="searchWord != null">
       and (b.employee_id like concat('%',#{searchWord,jdbcType=VARCHAR},'%') or
       b.name like concat('%',#{searchWord,jdbcType=VARCHAR},'%'))
     </if>
+    order by b.id desc
   </select>
 </mapper>

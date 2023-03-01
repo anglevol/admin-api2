@@ -9,6 +9,8 @@ import com.tenji.adminapi2.dto.EmployeeDto;
 import com.tenji.adminapi2.dto.UserInfo;
 import com.tenji.adminapi2.dto.UserInfoHolder;
 
+import com.tenji.adminapi2.dto.config.MasterClassCode;
+import com.tenji.adminapi2.exception.BizException;
 import com.tenji.adminapi2.mapper.EmployeeMapper;
 import com.tenji.adminapi2.model.Employee;
 import com.tenji.adminapi2.service.EmployeeService;
@@ -23,6 +25,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -57,7 +60,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         newEmployee.setCreatedate(new Date());
         newEmployee.setUpdatedate(new Date());
         int i = employeeMapper.insertSelective(newEmployee);
-        newEmployee.setEmployeeid("TJE_"+i);
+        newEmployee.setEmployeeid("TJE_"+newEmployee.getId());
         int j=  employeeMapper.updateByPrimaryKey(newEmployee);
         return j == 1 ? result : result.code(ApiResponseCode.status_103.getCode()).message(ApiResponseCode.status_103.getMessage());
     }
@@ -78,5 +81,20 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
         Employee employee = employeeMapper.selectByPrimaryKey(Long.parseLong(id));
         return result.data(employee);
+    }
+
+    @Override
+    public void deleteEmployee(Long id) {
+     Employee employee=   employeeMapper.selectByPrimaryKey(id);
+     if(Objects.isNull(employee)){
+         throw new BizException("エーラーです、選択したemployeeデータはありません。");
+     }
+        employee.setDeleted(Integer.parseInt(MasterClassCode.DELETEDFLAG_D.getCode()));
+        employee.setUpdatedate(new Date());
+        int i=employeeMapper.updateByPrimaryKeySelective(employee);
+        if(i <=0){
+            throw new BizException("エーラーです、employeeデータは更新失敗しました。");
+        }
+
     }
 }
