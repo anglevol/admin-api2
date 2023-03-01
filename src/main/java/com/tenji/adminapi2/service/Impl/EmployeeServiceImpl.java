@@ -6,23 +6,28 @@ import com.google.gson.Gson;
 import com.tenji.adminapi2.api.ApiResponse;
 import com.tenji.adminapi2.api.ApiResponseCode;
 import com.tenji.adminapi2.dto.EmployeeDto;
+import com.tenji.adminapi2.dto.EmployeeVo;
 import com.tenji.adminapi2.dto.UserInfo;
 import com.tenji.adminapi2.dto.UserInfoHolder;
 
 import com.tenji.adminapi2.dto.config.MasterClassCode;
 import com.tenji.adminapi2.exception.BizException;
 import com.tenji.adminapi2.mapper.EmployeeMapper;
+import com.tenji.adminapi2.mapper.MasterClassMapper;
 import com.tenji.adminapi2.model.Employee;
+import com.tenji.adminapi2.model.MasterClass;
 import com.tenji.adminapi2.service.EmployeeService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -33,6 +38,11 @@ public class EmployeeServiceImpl implements EmployeeService {
     Logger logger = LoggerFactory.getLogger(EmployeeServiceImpl.class);
     @Resource
     EmployeeMapper employeeMapper;
+
+    @Autowired
+    private  MasterClassMapper masterClassMapper;
+
+
     Gson gson = new Gson();
     public ApiResponse<String> addEmployee(EmployeeDto dto, HttpServletRequest request) {
         ApiResponse<String> result = new ApiResponse<String>("success");
@@ -80,7 +90,28 @@ public class EmployeeServiceImpl implements EmployeeService {
             return result.data(pageInfo);
         }
         Employee employee = employeeMapper.selectByPrimaryKey(Long.parseLong(id));
-        return result.data(employee);
+        if(Objects.isNull(employee) || employee.getDeleted()==1){
+            throw new BizException("エーラーです、選択したemployeeデータはありません。");
+        }
+        EmployeeVo vo = new EmployeeVo();
+        vo.setId(employee.getId());
+        vo.setEmployeeId(employee.getEmployeeid());
+        vo.setDepartmentCode(employee.getDepartmentCode());
+        if(MasterClassCode.GENDERMAN.getCode().equals(employee.getGender().toString())){
+            vo.setGender(MasterClassCode.GENDERMAN.getMessage());
+        }else{
+            vo.setGender(MasterClassCode.GENDERWOMEN.getMessage());
+        }
+        MasterClass masterClass=masterClassMapper.getByTypeAndCode(MasterClassCode.MASTER_TYPE2.getCode(),employee.getDepartmentCode());
+        if(Objects.isNull(masterClass)){
+            throw new BizException("エーラーです、選択したemployee　department はありません");
+        }
+        vo.setDepartmentName(masterClass.getValue());
+        vo.setName(employee.getName());
+        vo.setRemainingDays(employee.getRemainingDays());
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        vo.setEmployDate(format.format(employee.getEmploydate()));
+        return result.data(vo);
     }
 
     @Override
