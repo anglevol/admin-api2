@@ -100,6 +100,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         }else{
             vo.setGender(MasterClassCode.GENDERWOMEN.getMessage());
         }
+        vo.setGenderCode(employee.getGender());
         MasterClass masterClass=masterClassMapper.getByTypeAndCode(MasterClassCode.MASTER_TYPE2.getCode(),employee.getDepartmentCode());
         if(Objects.isNull(masterClass)){
             throw new BizException("エーラーです、選択したemployee　department はありません");
@@ -109,17 +110,44 @@ public class EmployeeServiceImpl implements EmployeeService {
         vo.setRemainingDays(employee.getRemainingDays());
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         vo.setEmployDate(format.format(employee.getEmploydate()));
+        vo.setComment(employee.getComment());
         return result.data(vo);
     }
 
     @Override
     public void deleteEmployee(Long id) {
      Employee employee=   employeeMapper.selectByPrimaryKey(id);
+        UserInfo userInfo= UserInfoHolder.get();
+        Long userId= userInfo.getUserId();
      if(Objects.isNull(employee)){
          throw new BizException("エーラーです、選択したemployeeデータはありません。");
      }
         employee.setDeleted(Integer.parseInt(MasterClassCode.DELETEDFLAG_D.getCode()));
         employee.setUpdatedate(new Date());
+        employee.setUserId(userId.intValue());
+        int i=employeeMapper.updateByPrimaryKeySelective(employee);
+        if(i <=0){
+            throw new BizException("エーラーです、employeeデータは更新失敗しました。");
+        }
+
+    }
+
+    @Override
+    public void updateEmployee(EmployeeDto dto) {
+        Employee employee=   employeeMapper.selectByPrimaryKey(dto.getId());
+        if(Objects.isNull(employee)){
+            throw new BizException("エーラーです、選択したemployeeデータはありません。");
+        }
+        UserInfo userInfo= UserInfoHolder.get();
+        Long userId= userInfo.getUserId();
+
+        employee.setName(dto.getName());
+        employee.setDepartmentCode(dto.getDepartmentCode());
+        employee.setGender(dto.getGender());
+        employee.setEmploydate(dto.getEmploydate());
+        employee.setComment(dto.getComment());
+        employee.setUpdatedate(new Date());
+        employee.setUserId(userId.intValue());
         int i=employeeMapper.updateByPrimaryKeySelective(employee);
         if(i <=0){
             throw new BizException("エーラーです、employeeデータは更新失敗しました。");

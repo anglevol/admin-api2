@@ -49,5 +49,12 @@ public class EmployeeController {
         return new ApiResponse<>();
     }
 
+    @PostMapping(value = "/update")
+    public ApiResponse<Void> updateEmployee(@RequestBody EmployeeDto dto){
+        employeeService.updateEmployee(dto);
+        return new ApiResponse<>();
+    }
+
+
 }
 

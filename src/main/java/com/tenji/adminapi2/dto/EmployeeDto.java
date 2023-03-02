@@ -6,6 +6,9 @@ import java.util.Date;
 
 @Data
 public class EmployeeDto {
+
+    private Long id;
+
     private String employeeid;
 
     private Integer userId;
