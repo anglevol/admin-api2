@@ -16,11 +16,15 @@ public class EmployeeVo {
 
     private String departmentName;
 
+    private Integer genderCode;
+
     private String  gender;
 
     private String employDate;
 
     private Integer remainingDays;
+
+    private String comment;
 
 
 
