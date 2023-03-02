@@ -52,26 +52,24 @@ public class EmployeeServiceImpl implements EmployeeService {
         if(userId !=1) {
             return result.code(ApiResponseCode.status_401.getCode()).message(ApiResponseCode.status_401.getMessage());
         }
-        Employee employee = employeeMapper.selectByUserId(dto.getUserId());
-        if(employee != null) {
-            return result.code(ApiResponseCode.status_1.getCode()).message("社员已存在");
-        }
+        Employee employee = null;
         employee = employeeMapper.selectByName(dto.getName());
         if(employee != null) {
             return result.code(ApiResponseCode.status_1.getCode()).message("社员已存在");
         }
-        employee = employeeMapper.selectByEmployeeId(dto.getEmployeeid());
-        if(employee != null) {
-            return result.code(ApiResponseCode.status_1.getCode()).message("社员已存在");
-        }
+//        employee = employeeMapper.selectByEmployeeId(dto.getEmployeeid());
+//        if(employee != null) {
+//            return result.code(ApiResponseCode.status_1.getCode()).message("社员已存在");
+//        }
         Employee newEmployee = new Employee();
         BeanUtils.copyProperties(dto, newEmployee);
         newEmployee.setUserId(userId.intValue());
         newEmployee.setCreatedate(new Date());
         newEmployee.setUpdatedate(new Date());
+
         int i = employeeMapper.insertSelective(newEmployee);
         newEmployee.setEmployeeid("TJE_"+newEmployee.getId());
-        int j=  employeeMapper.updateByPrimaryKey(newEmployee);
+        int j=  employeeMapper.updateByPrimaryKeySelective(newEmployee);
         return j == 1 ? result : result.code(ApiResponseCode.status_103.getCode()).message(ApiResponseCode.status_103.getMessage());
     }
 

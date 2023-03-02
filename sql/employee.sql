@@ -15,3 +15,7 @@ CREATE TABLE `employee` (
 
 ALTER TABLE `holiday`.`employee`
     ADD COLUMN `deleted` int(1) NOT NULL DEFAULT 0 AFTER `updatedate`;
+
+
+ALTER TABLE `holiday`.`employee`
+    MODIFY COLUMN `remaining_days` int(4) NOT NULL DEFAULT 0 AFTER `employdate`;
