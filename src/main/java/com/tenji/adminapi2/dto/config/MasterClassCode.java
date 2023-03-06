@@ -12,7 +12,9 @@ public enum MasterClassCode {
     HOLIDAYLOGTYPE1("1","付与"),
     HOLIDAYLOGTYPE2("2","消化"),
     DELETEDFLAG_N("0","普通"),
-    DELETEDFLAG_D("1","削除");
+    DELETEDFLAG_D("1","削除"),
+    GENDERMAN("0","男"),
+    GENDERWOMEN("1","女");
 
     private String code;
 

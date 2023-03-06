@@ -5,25 +5,29 @@ import lombok.Data;
 import java.util.Date;
 
 @Data
-public class EmployeeDto {
+public class EmployeeVo {
 
     private Long id;
-
-    private String employeeid;
-
-    private Integer userId;
+    private String employeeId;
 
     private String name;
 
     private String departmentCode;
 
-    private Integer gender;
+    private String departmentName;
 
-    private Date employdate;
+    private Integer genderCode;
+
+    private String  gender;
+
+    private String employDate;
 
     private Integer remainingDays;
 
     private String comment;
+
+
+
 
 }
 
